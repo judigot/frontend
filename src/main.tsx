@@ -1,4 +1,4 @@
-import App from '@/bootstrap';
+import App from '@/cheatsheet';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 

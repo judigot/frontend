@@ -30,13 +30,13 @@ export default class ExampleComponent extends React.Component<Props, State> {
 
   componentDidUpdate(_prevProps: Props, prevState: State) {
     if (this.state.count !== prevState.count) {
-      // eslint-disable-next-line no-console
+      
       console.log('Count state has changed.');
     }
   }
 
   componentWillUnmount() {
-    // eslint-disable-next-line no-console
+    
     console.log('Component will be removed from the DOM');
   }
 

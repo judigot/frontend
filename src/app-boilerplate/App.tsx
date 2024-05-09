@@ -20,12 +20,11 @@ export const App = () => {
   const [initialData, setInitialData] = React.useState<object>();
 
   function expensiveCalculation(): number {
-    // eslint-disable-next-line no-console
     console.log('Calculating...');
     for (let i = 0; i < 3000000000; i++) {
       /* empty */
     }
-    // eslint-disable-next-line no-console
+
     console.log('Done calculating!');
     return 0;
   }

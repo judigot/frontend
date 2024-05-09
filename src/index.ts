@@ -28,7 +28,7 @@ app.get('/api', (_req: Request, res: Response) =>
 
 // Start server
 app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
+  
   console.log(
     `${platform.charAt(0).toUpperCase() + platform.slice(1)} is running on http://localhost:${PORT}`,
   );
