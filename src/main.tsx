@@ -1,4 +1,4 @@
-import App from '@/cheatsheet';
+import App from '@/class-comp-countries';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
