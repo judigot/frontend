@@ -1,0 +1,19 @@
+@import "bootstrap/master-bootstrap"; // Always import bootstrap inside SCSS files to load components that you only use
+
+$primary: black;
+
+main {
+  color: white;
+}
+
+body {
+  color: $primary;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.App {
+  text-align: center;
+}
