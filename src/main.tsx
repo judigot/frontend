@@ -1,4 +1,4 @@
-import App from '@/react-query';
+import App from '@/tailwind';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
