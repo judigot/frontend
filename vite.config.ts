@@ -23,5 +23,8 @@ export default defineConfig({
   // <basepath>
   base: './', // Resolve asset paths after building
   // </basepath>
+  server: {
+    port: 3000,
+  },
   plugins: [react(), tsconfigPaths()],
 });

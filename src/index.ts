@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 
 const app = express();
-const PORT = (process.env.PORT ?? 3000).toString();
+const PORT = (process.env.PORT ?? 5000).toString();
 const platform: string = process.platform;
 let __dirname = path.dirname(decodeURI(new URL(import.meta.url).pathname));
 

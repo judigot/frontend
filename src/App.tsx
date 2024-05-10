@@ -8,7 +8,7 @@ function App(): JSX.Element {
   const [data, setData] = React.useState<IData | undefined>(undefined);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api', {
+    fetch('http://localhost:5000/api', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
