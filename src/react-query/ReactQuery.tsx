@@ -25,9 +25,11 @@ export interface Quote {
 
 async function getData({ queryKey }: Query) {
   const [resource, formData] = queryKey;
-  console.log(`${resource}__${JSON.stringify(formData, null, 4)}`);
 
-  return Data();
+  if (Object.keys(formData).includes('searchQuery')) {
+    console.log(`${resource}__${JSON.stringify(formData, null, 4)}`);
+    return Data();
+  }
 }
 
 const ReactQuery = () => {
@@ -35,32 +37,7 @@ const ReactQuery = () => {
 
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const {
-    data,
-    isLoading,
-    dataUpdatedAt,
-    refetch,
-    error,
-    // errorUpdatedAt,
-    // failureCount,
-    // failureReason,
-    isError,
-    // isFetched,
-    // isFetchedAfterMount,
-    // isFetching,
-    // isPaused,
-    // isLoadingError,
-    // isPlaceholderData,
-    // isPreviousData,
-    // isRefetchError,
-    // isRefetching,
-    // isInitialLoading,
-    // isStale,
-    isSuccess,
-    // remove,
-    // status,
-    // fetchStatus,
-  } = useQuery({
+  const { data, isError, isSuccess, dataUpdatedAt, refetch } = useQuery({
     queryKey: ['users', { searchQuery: searchRef.current?.value }],
     queryFn: getData, // Function to fetch data
     //==========BEHAVIOR==========//
@@ -69,9 +46,6 @@ const ReactQuery = () => {
     refetchInterval: 2 * 1000, // Every 30 seconds
     staleTime: 2 * 1000, // Every 30 seconds
     //==========BEHAVIOR==========//
-    //
-    //
-    // initialData: { asdasd: 'asdasd' },
     initialData: () => {
       getData({
         queryKey: ['users', { searchQuery: 'initialData' }],
@@ -102,9 +76,6 @@ const ReactQuery = () => {
       });
 
       const time = new Date(dataUpdatedAt).toLocaleString('en-US', {
-        // year: "numeric",
-        // month: "numeric",
-        // day: "numeric",
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
@@ -114,35 +85,6 @@ const ReactQuery = () => {
       setMessage(`${month} ${String(day)}, ${String(year)} at ${time}`);
     }
   }, [dataUpdatedAt, isSuccess]);
-
-  if (error) {
-    setMessage(JSON.stringify(error));
-  }
-  // if (dataUpdatedAt) {setMessage(JSON.stringify(dataUpdatedAt))};
-  // if (errorUpdatedAt) {setMessage(JSON.stringify(errorUpdatedAt))};
-  // if (failureCount) {setMessage(JSON.stringify(failureCount))};
-  // if (failureReason) {setMessage(JSON.stringify(failureReason))};
-  // if (isError) {setMessage(JSON.stringify(isError))};
-  // if (isFetched) {setMessage(JSON.stringify(isFetched))};
-  // if (isFetchedAfterMount)
-  //   {setMessage(JSON.stringify(isFetchedAfterMount))};
-  // if (isFetching) {setMessage(JSON.stringify(isFetching))};
-  // if (isPaused) {setMessage(JSON.stringify(isPaused))};
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (isLoading) return <div>Loading...</div>;
-
-  // if (isLoadingError) {setMessage(JSON.stringify(isLoadingError))};
-  // if (isPlaceholderData) {setMessage(JSON.stringify(isPlaceholderData))};
-  // if (isPreviousData) {setMessage(JSON.stringify(isPreviousData))};
-  // if (isRefetchError) {setMessage(JSON.stringify(isRefetchError))};
-  // if (isRefetching) {setMessage(JSON.stringify(isRefetching))};
-  // if (isInitialLoading) {setMessage(JSON.stringify(isInitialLoading))};
-  // if (isStale) {setMessage(JSON.stringify(isStale))};
-  // if (refetch) {setMessage(JSON.stringify(refetch))};
-  // if (remove) {setMessage(JSON.stringify(remove))};
-  // if (status) {setMessage(JSON.stringify(status))};
-  // if (fetchStatus) {setMessage(JSON.stringify(fetchStatus))};
 
   return (
     <>
