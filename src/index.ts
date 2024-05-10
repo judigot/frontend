@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const PORT = (process.env.PORT ?? 5000).toString();
@@ -19,6 +21,13 @@ app.use(express.static(publicDirectory));
 
 // Define routes
 app.get('/', (_req, res) => {
+  const isDevelopment: boolean = String(process.env.NODE_ENV) === 'development';
+
+  if (isDevelopment) {
+    res.redirect(String(process.env.VITE_FRONTEND_URL));
+    return;
+  }
+
   res.sendFile(publicDirectory);
 });
 
@@ -28,7 +37,6 @@ app.get('/api', (_req: Request, res: Response) =>
 
 // Start server
 app.listen(PORT, () => {
-  
   console.log(
     `${platform.charAt(0).toUpperCase() + platform.slice(1)} is running on http://localhost:${PORT}`,
   );

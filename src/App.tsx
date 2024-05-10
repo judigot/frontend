@@ -8,13 +8,16 @@ function App(): JSX.Element {
   const [data, setData] = React.useState<IData | undefined>(undefined);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+    fetch(
+      `${String(import.meta.env.VITE_BACKEND_URL)}/${String(import.meta.env.VITE_API_URL)}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
       .then((response) => response.json())
       .then((result: IData | undefined) => {
         // Success
