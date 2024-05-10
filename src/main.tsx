@@ -29,7 +29,7 @@ if (rootElement) {
             title: 'Country',
             type: 'dropdown',
             options: ['USA', 'Canada', 'UK'],
-            default: 0,
+            default: '0',
           },
           {
             title: 'Appointment Time',

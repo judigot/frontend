@@ -8,6 +8,39 @@ interface Props {
   form: MasterField[];
 }
 
+/* USAGE
+<App
+  form={[
+    {
+      title: 'Username',
+      type: 'text',
+      maxLength: 20,
+    },
+    {
+      title: 'Age',
+      type: 'number',
+      min: 18,
+      max: 100,
+    },
+    {
+      title: 'Receive Newsletter',
+      type: 'boolean',
+      isChecked: true,
+    },
+    {
+      title: 'Country',
+      type: 'dropdown',
+      options: ['USA', 'Canada', 'UK'],
+      default: '0',
+    },
+    {
+      title: 'Appointment Time',
+      type: 'time',
+    },
+  ]}
+/>
+*/
+
 const FormBuilder = ({ form }: Props) => {
   return (
     <>
