@@ -1,4 +1,4 @@
-import App from '@/material-ui';
+import App from '@/movies';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
