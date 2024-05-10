@@ -1,4 +1,4 @@
-import App from '@/tailwind';
+import App from '@/bootstrap';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 

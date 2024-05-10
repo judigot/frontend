@@ -6,25 +6,25 @@
 /*******************
  * DEFAULT IMPORTS *
  *******************/
-@import "../node_modules/bootstrap/scss/functions";
+@import "bootstrap/scss/functions";
 
-@import "../node_modules/bootstrap/scss/variables";
-@import "../node_modules/bootstrap/scss/maps";
-@import "../node_modules/bootstrap/scss/mixins";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
 
-@import "../node_modules/bootstrap/scss/root";
-@import "../node_modules/bootstrap/scss/reboot";
-@import "../node_modules/bootstrap/scss/type";
-@import "../node_modules/bootstrap/scss/images";
-@import "../node_modules/bootstrap/scss/containers";
-@import "../node_modules/bootstrap/scss/grid";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
 
-@import "../node_modules/bootstrap/scss/close";
-@import "../node_modules/bootstrap/scss/transitions";
+@import "bootstrap/scss/close";
+@import "bootstrap/scss/transitions";
 
 /*******************
  * DEFAULT IMPORTS *
  *******************/
 
 // Uncomment to detect misbehaviors in Bootstrap
-// @import "../node_modules/bootstrap/scss/bootstrap";
+// @import "bootstrap/scss/bootstrap";
