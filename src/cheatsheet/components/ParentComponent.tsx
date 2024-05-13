@@ -86,7 +86,7 @@ export const ParentComponent = () => {
 
   const [oneTimeStateChange, setOneTimeStateChange] = useState<
     boolean | string
-  >(false); // <any> will allow any data type on state change
+  >(false);
 
   const handleOneTimeStateChange = () => {
     if (oneTimeStateChange === false) {
@@ -96,7 +96,7 @@ export const ParentComponent = () => {
 
   const [parentState, setParentState] = useState<string>(
     'Initial parent state',
-  ); // <any> will allow any data type on state change
+  );
 
   return (
     <div
