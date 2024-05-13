@@ -35,6 +35,20 @@ app.get('/api', (_req: Request, res: Response) =>
   res.json({ message: path.join(publicDirectory, 'index.html') }),
 );
 
+app.get('/api/users', (_req: Request, res: Response) =>
+  res.json([
+    {
+      id: 1,
+      first_name: 'John',
+      last_name: 'Doe',
+      email: 'john@gmail.com',
+      password: 'john123',
+      created_at: new Date('2014-12-14'),
+      updated_at: new Date('2014-12-25'),
+    },
+  ]),
+);
+
 // Start server
 app.listen(PORT, () => {
   console.log(

@@ -1,4 +1,4 @@
-import App from '@/test';
+import App from '@/datatables';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
