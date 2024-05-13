@@ -1,4 +1,4 @@
-import App from '@/react-window';
+import App from '@/test';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
