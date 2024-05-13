@@ -46,16 +46,15 @@ const ReactQuery = () => {
     refetchInterval: 2 * 1000, // Every 30 seconds
     staleTime: 2 * 1000, // Every 30 seconds
     //==========BEHAVIOR==========//
-    initialData: () => {
-      getData({
-        queryKey: ['users', { searchQuery: 'initialData' }],
-      })
-        .then((result) => {
-          // Success
-          return result;
-        })
-        .catch(() => {})
-        .finally(() => {});
+    initialData: {
+      _id: '1',
+      content: 'Lorem ipsum dolor sit amet, consectetur adip.',
+      author: 'Anonymous',
+      tags: ['Famous Quotes'],
+      authorSlug: 'anonymous',
+      length: 46,
+      dateAdded: new Date('2019-08-16'),
+      dateModified: new Date('2023-04-14'),
     },
   });
 
