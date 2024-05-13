@@ -1,4 +1,4 @@
-import App from '@/datatables';
+import App from '@/mui-datatables';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
