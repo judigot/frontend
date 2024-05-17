@@ -1,19 +1,21 @@
 export default async () => {
+  let data: object | object[] | undefined = undefined;
+
   try {
     const response = await fetch(`http://localhost:5000/api/orders`, {
       // *GET, POST, PATCH, PUT, DELETE
-      method: "GET",
+      method: 'GET',
       headers: {
-        Accept: "application/json, text/plain, */*", // Same as axios
-        "Content-Type": "application/json",
+        Accept: 'application/json, text/plain, */*', // Same as axios
+        'Content-Type': 'application/json',
       },
       // For POST/PUT requests
       // body: JSON.stringify({ key: "value" }),
     });
-    if (response?.ok) {
-      return response.json();
+    if (response.ok) {
+      data = response.json();
     } else {
-      throw new Error(`HTTP error: ${response}`);
+      throw new Error(`HTTP error: ${String(response)}`);
     }
   } catch (error: unknown) {
     if (typeof error === `string`) {
@@ -24,8 +26,12 @@ export default async () => {
     }
     if (error instanceof SyntaxError) {
       // Unexpected token < in JSON
-      throw new Error(`Syntax Error: ${error}`);
+      throw new Error(`Syntax Error: ${String(error)}`);
     }
-  } finally {
+  }
+
+  // Success
+  if (data) {
+    return data;
   }
 };

@@ -15,7 +15,6 @@ interface Datatype {
 }
 
 export function ReactWindow() {
-
   const [data, setInitialData] = React.useState<Datatype[]>();
 
   React.useEffect(() => {
@@ -25,14 +24,8 @@ export function ReactWindow() {
     }
 
     async function getData() {
-
-      await Data()
-        .then((result: Datatype[]) => {
-          // Success
-          setInitialData(result);
-        })
-        .catch(() => {})
-        .finally(() => {});
+      const result = (await Data()) as Datatype[];
+      setInitialData(result);
     }
   }, [data]);
 
