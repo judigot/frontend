@@ -1,4 +1,4 @@
-import App from '@/mui-datatables';
+import App from '@/salesmaster';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
