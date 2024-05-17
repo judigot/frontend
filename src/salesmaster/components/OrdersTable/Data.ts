@@ -12,7 +12,7 @@ export interface Datatype {
 
 const URL = `http://localhost:5000/api/orders`;
 
-// const titleCaseColumnNames = true;
+const isTitleCaseColumnNames = true;
 
 const Data = async () => {
   try {
@@ -54,7 +54,10 @@ export const DefaultColumns = await (async () => {
     const columnNames: { [key: string]: string } = {};
 
     for (let i = 0, arrayLength = keys.length; i < arrayLength; i++) {
-      columnNames[keys[i] as keyof typeof columnNames] = titleCase(keys[i]);
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      columnNames[keys[i] as keyof typeof columnNames] = isTitleCaseColumnNames
+        ? titleCase(keys[i])
+        : keys[i];
     }
 
     return assignColumnNames(columnNames);

@@ -44,12 +44,14 @@ import { RootState } from '@/salesmaster/store';
 
 import styled from 'styled-components';
 
+// Generic table
+// import Data, { Datatype, DefaultColumns as Columns } from "./Data";
+// import Filter from "./DefaultFilter";
+
+// Salesmaster table
 import Data, { Datatype } from './Data';
 import Columns from './CustomCells&Columns';
 import Filter from './CustomCells&ColumnsFilter';
-
-// import Data, { Datatype, DefaultColumns as Columns } from "./Data";
-// import Filter from "./DefaultFilter";
 
 // import Data, { Datatype } from "./Data";
 // import Columns from "./CustomColumns";
@@ -178,7 +180,7 @@ export default function App() {
 
   const table = useReactTable({
     data,
-    columns: Columns as ColumnDef<Datatype>[],
+    columns: Columns as unknown as ColumnDef<Datatype>[],
     filterFns: {
       fuzzy: fuzzyFilter,
     },
