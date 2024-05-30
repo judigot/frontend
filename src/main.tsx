@@ -1,4 +1,4 @@
-import App from '@/salesmaster';
+import App from '@/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
