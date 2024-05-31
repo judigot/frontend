@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
-import { useAtom } from 'jotai';
-import { searchQueryAtom } from '@/data-fetcher/components/DataTable/state';
+import { useSearchQueryStore } from '@/data-fetcher/components/DataTable/store';
 
 const ClickableStyled = styled.div`
   font-family: sans-serif;
@@ -21,13 +20,13 @@ const ClickableStyled = styled.div`
   }
 `;
 
-export interface Props {
+export interface IProps {
   item: string;
   forCustomer?: boolean;
   forDate?: boolean;
 }
-export const Clickable = ({ item, forCustomer, forDate }: Props) => {
-  const [, setSearchQuery] = useAtom<string>(searchQueryAtom);
+export const Clickable = ({ item, forCustomer, forDate }: IProps) => {
+  const { setSearchQuery } = useSearchQueryStore();
 
   return (
     <ClickableStyled

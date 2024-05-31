@@ -1,6 +1,7 @@
 import { IOrderDetails } from '@/salesmaster/components/OrdersTable/OrderDetails/OrderDetails';
 import { assignColumnNames } from './CustomColumns';
 import { titleCase } from './helpers/helpers';
+import getData from '@/data-fetcher/api/getData';
 
 export interface Datatype {
   order_id: number;
@@ -11,40 +12,11 @@ export interface Datatype {
   [key: string]: number | string | IOrderDetails[] | Date;
 }
 
-const URL = `http://localhost:8080/api/orders`;
-
 const isTitleCaseColumnNames = true;
-
-const Data = async () => {
-  try {
-    const response = await fetch(URL, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error(`HTTP error: ${String(response)}`);
-    }
-  } catch (error: unknown) {
-    if (typeof error === `string`) {
-      throw new Error(`There was an error: ${error}`);
-    }
-    if (error instanceof Error) {
-      throw new Error(`There was an error: ${error.message}`);
-    }
-    if (error instanceof SyntaxError) {
-      throw new Error(`Syntax Error: ${String(error)}`);
-    }
-  }
-};
 
 export const DefaultColumns = await (async () => {
   try {
-    const data = (await Data()) as unknown as object[];
+    const data = (await getData()) as object[];
     const keys: string[] = Object.keys(data[0]);
     const columnNames: { [key: string]: string } = {};
 
@@ -65,5 +37,3 @@ export const DefaultColumns = await (async () => {
     }
   }
 })();
-
-export default Data;

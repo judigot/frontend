@@ -1,4 +1,4 @@
-import App from '@/zustand';
+import App from '@/data-fetcher';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 

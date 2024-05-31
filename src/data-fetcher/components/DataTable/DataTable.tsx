@@ -17,8 +17,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import { useAtom } from 'jotai';
-import { searchQueryAtom } from './state';
+import { useSearchQueryStore } from './store';
 
 import {
   useReactTable,
@@ -41,7 +40,10 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import styled from 'styled-components';
 
-import Data, { Datatype, DefaultColumns as Columns } from './Data';
+import { Datatype, DefaultColumns as Columns } from './Data';
+
+import Data from '../../api/getData';
+
 import { fuzzyFilter } from './Filter';
 
 const darkTheme = createTheme({
@@ -108,7 +110,7 @@ export interface FilterMeta {
 // }
 
 export default function App() {
-  const [searchQuery, setSearchQuery] = useAtom<string>(searchQueryAtom);
+  const { searchQuery, setSearchQuery } = useSearchQueryStore();
 
   const [data, setData] = React.useState<Datatype[]>([]);
   const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
@@ -232,7 +234,7 @@ export default function App() {
         <OrdersFooter>
           <PageInfoContainer>
             {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
-            <span>{table.getPrePaginationRowModel().rows.length} Orders</span>
+            <span>{table.getPrePaginationRowModel().rows.length} rows</span>
             <span> | </span>
             <span className="flex items-center gap-1">
               <span>Page </span>
