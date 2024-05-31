@@ -14,3 +14,9 @@ export const formatDate = (date: Date) => {
 
   return `${month} ${String(day)}, ${String(year)} at ${time}`;
 };
+
+export const titleCase = (string: string) => {
+  return string
+    .replace(/^[-_]*(.)/, (_, c: string) => c.toUpperCase())
+    .replace(/[-_]+(.)/g, (_, c: string) => ' ' + c.toUpperCase());
+};

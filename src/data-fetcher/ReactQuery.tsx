@@ -8,7 +8,7 @@ import {
 
 import Data from './api/getData';
 import { isIDataType } from '@/data-fetcher/components/types/TypeGuards';
-import OrdersTable from '@/data-fetcher/components/OrdersTable';
+import DataTable from '@/data-fetcher/components/DataTable';
 
 const queryClient = new QueryClient();
 
@@ -34,18 +34,18 @@ const App = () => {
   } = useQuery({
     queryKey: ['users', { searchQuery: searchRef.current?.value }],
     queryFn: getData, // Function to fetch data
-    //==========BEHAVIOR==========//
-    gcTime: 5 * 60000, // 5 minutes cache time
-    refetchOnWindowFocus: true,
-    refetchInterval: 1 * 1000, // Refetch every n seconds
-    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
-    //==========BEHAVIOR==========//
     // initialData: [
     //   {
     //     Name: 'Loading',
     //     Description: 'Loading',
     //   },
     // ],
+    //==========BEHAVIOR==========//
+    gcTime: 5 * 60000, // 5 minutes cache time
+    refetchOnWindowFocus: true,
+    refetchInterval: 1 * 1000, // Refetch every n seconds
+    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
+    //==========BEHAVIOR==========//
   });
 
   // prettier-ignore
@@ -61,7 +61,7 @@ const App = () => {
 
       {isError && <h1>Error</h1>}
 
-      {data && <OrdersTable />}
+      {data && <DataTable />}
 
       {/* {data?.map(({ Name, Description }) => (
         <div key={Name}>

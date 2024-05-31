@@ -4,7 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 import { useAtom } from 'jotai';
-import { searchQueryAtom } from '@/data-fetcher/components/OrdersTable/state';
+import { searchQueryAtom } from '@/data-fetcher/components/DataTable/state';
 
 const ClickableStyled = styled.div`
   font-family: sans-serif;

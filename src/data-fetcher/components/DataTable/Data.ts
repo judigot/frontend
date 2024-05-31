@@ -1,5 +1,6 @@
 import { IOrderDetails } from '@/salesmaster/components/OrdersTable/OrderDetails/OrderDetails';
 import { assignColumnNames } from './CustomColumns';
+import { titleCase } from './helpers/helpers';
 
 export interface Datatype {
   order_id: number;
@@ -39,12 +40,6 @@ const Data = async () => {
       throw new Error(`Syntax Error: ${String(error)}`);
     }
   }
-};
-
-const titleCase = (string: string) => {
-  return string
-    .replace(/^[-_]*(.)/, (_, c: string) => c.toUpperCase())
-    .replace(/[-_]+(.)/g, (_, c: string) => ' ' + c.toUpperCase());
 };
 
 export const DefaultColumns = await (async () => {

@@ -17,6 +17,9 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import { useAtom } from 'jotai';
+import { searchQueryAtom } from './state';
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -38,21 +41,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import styled from 'styled-components';
 
-// Generic table
-// import Data, { Datatype, DefaultColumns as Columns } from "./Data";
-// import Filter from "./DefaultFilter";
-
-// Salesmaster table
-import Data, { Datatype } from './Data';
-import Columns from './CustomCells&Columns';
-import Filter from './CustomCells&ColumnsFilter';
-
-// import Data, { Datatype } from "./Data";
-// import Columns from "./CustomColumns";
-// import Filter from "./DefaultFilter";
-
-import { useAtom } from 'jotai';
-import { searchQueryAtom } from './state';
+import Data, { Datatype, DefaultColumns as Columns } from './Data';
+import { fuzzyFilter } from './Filter';
 
 const darkTheme = createTheme({
   palette: {
@@ -116,48 +106,6 @@ export interface FilterMeta {
   itemRank: RankingInfo;
 }
 // }
-
-const fuzzyFilter: FilterFn<Datatype> = (
-  row,
-  _columnId,
-  searchInput: string,
-  _addMeta,
-) => {
-  const rowContent = [];
-  for (
-    let i = 0, arrayLength = row.getVisibleCells().length;
-    i < arrayLength;
-    i++
-  ) {
-    const columnName = row.getVisibleCells()[i].column.id;
-
-    const cell = row.getVisibleCells()[i] as unknown as {
-      column: { columnDef: { cell: () => void } };
-    };
-
-    const cellValue = row.getVisibleCells()[i].getValue() as
-      | string
-      | object
-      | Date
-      | (string | number | object)[];
-
-    rowContent.push(Filter(cellValue, columnName, cell));
-    // rowContent.push(CustomFilter(cellValue, columnName, cell));
-  }
-
-  // Convert array to string and remove commas
-  let rowInStringForm = rowContent.join('');
-
-  // Sanitize: remove all spaces for better matching, convert to uppercase
-  searchInput = searchInput.replace(/\s+/g, '').toUpperCase();
-  rowInStringForm = rowInStringForm.replace(/\s+/g, '').toUpperCase();
-
-  if (rowInStringForm.includes(searchInput)) {
-    return true;
-  }
-
-  return false;
-};
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useAtom<string>(searchQueryAtom);
