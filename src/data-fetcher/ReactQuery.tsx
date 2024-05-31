@@ -8,6 +8,7 @@ import {
 
 import Data from './api/getData';
 import { isIDataType } from '@/data-fetcher/components/types/TypeGuards';
+import OrdersTable from '@/data-fetcher/components/OrdersTable';
 
 const queryClient = new QueryClient();
 
@@ -60,12 +61,14 @@ const App = () => {
 
       {isError && <h1>Error</h1>}
 
-      {data?.map(({ Name, Description }) => (
+      {data && <OrdersTable />}
+
+      {/* {data?.map(({ Name, Description }) => (
         <div key={Name}>
           <h1>{Name}</h1>
           <p>{Description}</p>
         </div>
-      ))}
+      ))} */}
     </>
   );
 };
