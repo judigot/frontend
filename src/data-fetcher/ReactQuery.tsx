@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 
 import {
   QueryClient,
@@ -6,118 +6,66 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
+import Data from './api/getData';
+import { isIDataType } from '@/data-fetcher/components/types/TypeGuards';
+
 const queryClient = new QueryClient();
 
-import Data from './helpers/Data';
-
-interface FormData {
-  searchQuery: string | undefined;
-}
-
-interface Query {
-  queryKey: [string, FormData];
-}
-
-export interface Quote {
-  _id: string;
-  content: string;
-  author: string;
-  tags: string[];
-  authorSlug: string;
-  length: number;
-  dateAdded: Date;
-  dateModified: Date;
-}
-
 const App = () => {
-  const [message, setMessage] = useState<string>(``);
-
   const searchRef = useRef<HTMLInputElement>(null);
 
-  async function getData({ queryKey }: Query) {
-    const [resource, formData] = queryKey;
+  async function getData() {
+    const result = await Data();
 
-    if (Object.keys(formData).includes('searchQuery')) {
-      console.log(`${resource}__${JSON.stringify(formData, null, 4)}`);
-      return Data();
+    if (!isIDataType(result)) {
+      throw new Error('Result is not of type IData[]');
     }
+    return result;
   }
 
-  const { data, isError, isSuccess, dataUpdatedAt, refetch } = useQuery({
+  const {
+    data = undefined,
+    isError,
+    isSuccess,
+    isLoading,
+    dataUpdatedAt,
+    // refetch,
+  } = useQuery({
     queryKey: ['users', { searchQuery: searchRef.current?.value }],
     queryFn: getData, // Function to fetch data
     //==========BEHAVIOR==========//
     gcTime: 5 * 60000, // 5 minutes cache time
-    refetchOnWindowFocus: 'always',
-    refetchInterval: 2 * 1000, // Every 30 seconds
-    staleTime: 2 * 1000, // Every 30 seconds
+    refetchOnWindowFocus: true,
+    refetchInterval: 1 * 1000, // Refetch every n seconds
+    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
     //==========BEHAVIOR==========//
-    initialData: {
-      _id: '1',
-      content: 'Lorem ipsum dolor sit amet, consectetur adip.',
-      author: 'Anonymous',
-      tags: ['Famous Quotes'],
-      authorSlug: 'anonymous',
-      length: 46,
-      dateAdded: new Date('2019-08-16'),
-      dateModified: new Date('2023-04-14'),
-    },
+    // initialData: [
+    //   {
+    //     Name: 'Loading',
+    //     Description: 'Loading',
+    //   },
+    // ],
   });
 
-  useEffect(() => {
-    if (isError) {
-      console.log('There was an error!');
-    }
-  }, [isError]);
+  // prettier-ignore
+  useEffect(() => { if (isError) { console.log('There was an error!'); } }, [isError]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      const date = new Date(dataUpdatedAt);
-
-      const year = date.getFullYear();
-      const day = date.getDate();
-      const month = date.toLocaleString('default', {
-        month: 'long',
-      });
-
-      const time = new Date(dataUpdatedAt).toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-      });
-
-      setMessage(`${month} ${String(day)}, ${String(year)} at ${time}`);
-    }
-  }, [dataUpdatedAt, isSuccess]);
+  // prettier-ignore
+  useEffect(() => { if (isSuccess) { console.log('Success!'); } }, [dataUpdatedAt, isSuccess]);
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <h1>{message}</h1>
+      {/* If there's no initialData, you can use isLoading */}
+      {isLoading && <h1>Loading</h1>}
 
-        <input
-          onChange={() => {
-            void refetch();
-          }}
-          required
-          ref={searchRef}
-          type="text"
-          name="username"
-        />
+      {isError && <h1>Error</h1>}
 
-        <p>
-          <a
-            href="https://tanstack.com/query/v4/docs/react/community/tkdodos-blog"
-            target="_blank"
-            rel="noreferrer"
-          >
-            TanStack React Query Best Practices
-          </a>
-        </p>
-
-        <code>{JSON.stringify(data)}</code>
-      </Suspense>
+      {data?.map(({ Name, Description }) => (
+        <div key={Name}>
+          <h1>{Name}</h1>
+          <p>{Description}</p>
+        </div>
+      ))}
     </>
   );
 };
@@ -125,7 +73,9 @@ const App = () => {
 export const ReactQuery = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <App />
+      <Suspense fallback={<div>Loading...</div>}>
+        <App />
+      </Suspense>
     </QueryClientProvider>
   );
 };

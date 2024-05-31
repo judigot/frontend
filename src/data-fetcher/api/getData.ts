@@ -1,17 +1,21 @@
-export default async () => {
-  let data: object | object[] | undefined = undefined;
+export default async (): Promise<unknown> => {
+  let data: unknown;
 
   try {
-    const response = await fetch(`https://api.quotable.io/random`, {
-      // *GET, POST, PATCH, PUT, DELETE
-      method: 'GET',
-      headers: {
-        Accept: 'application/json, text/plain, */*', // Same as axios
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      // `http://localhost:8080/api/orders`,
+      `https://dinosaur-facts-api.shultzlab.com/dinosaurs`,
+      {
+        // *GET, POST, PATCH, PUT, DELETE
+        method: 'GET',
+        headers: {
+          Accept: 'application/json, text/plain, */*', // Same as axios
+          'Content-Type': 'application/json',
+        },
+        // For POST/PUT requests
+        // body: JSON.stringify({ key: "value" }),
       },
-      // For POST/PUT requests
-      // body: JSON.stringify({ key: "value" }),
-    });
+    );
     if (response.ok) {
       data = response.json();
     } else {
@@ -31,7 +35,5 @@ export default async () => {
   }
 
   // Success
-  if (data) {
-    return data;
-  }
+  return data;
 };
