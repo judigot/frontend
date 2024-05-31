@@ -6,7 +6,7 @@ interface ICounterStore {
 }
 
 export const useCounterStore = create<ICounterStore>()((set) => ({
-  count: 1,
+  count: 0,
   increment: () => {
     set(({ count }) => ({ count: count + 1 }));
   },

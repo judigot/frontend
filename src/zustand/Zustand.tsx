@@ -4,8 +4,11 @@ export default function Zustand() {
   const { count, increment } = useCounterStore();
 
   return (
-    <button type="button" onMouseDown={increment}>
-      Count: {count}
-    </button>
+    <>
+      <h1>Zustand</h1>
+      <button type="button" onMouseDown={increment}>
+        Count: {count}
+      </button>
+    </>
   );
 }
