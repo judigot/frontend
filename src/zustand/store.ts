@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
-interface Store {
+interface ICounterStore {
   count: number;
   increment: () => void;
 }
 
-export const useStore = create<Store>()((set) => ({
+export const useCounterStore = create<ICounterStore>()((set) => ({
   count: 1,
   increment: () => {
     set(({ count }) => ({ count: count + 1 }));
