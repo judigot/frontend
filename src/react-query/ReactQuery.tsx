@@ -48,9 +48,9 @@ const App = () => {
     queryFn: getData, // Function to fetch data
     //==========BEHAVIOR==========//
     gcTime: 5 * 60000, // 5 minutes cache time
-    refetchOnWindowFocus: 'always',
-    refetchInterval: 2 * 1000, // Every 30 seconds
-    staleTime: 2 * 1000, // Every 30 seconds
+    refetchOnWindowFocus: true,
+    refetchInterval: 1 * 1000, // Refetch every n seconds
+    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
     //==========BEHAVIOR==========//
     initialData: {
       _id: '1',
