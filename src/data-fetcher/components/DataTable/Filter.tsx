@@ -1,4 +1,3 @@
-import { Datatype } from '@/data-fetcher/components/DataTable/Data';
 import { FilterFn } from '@tanstack/react-table';
 
 /*
@@ -31,7 +30,7 @@ function normalizeString(str: string): string {
  * Sanitizes the row string and the search input by removing spaces and converting to uppercase.
  * Checks if the search input is included in the row string.
  */
-export const fuzzyFilter: FilterFn<Datatype> = (
+export const fuzzyFilter: FilterFn<unknown> = (
   row,
   _columnId,
   searchInput: string,

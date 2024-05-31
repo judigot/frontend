@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -40,11 +40,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import styled from 'styled-components';
 
-import { Datatype, DefaultColumns as Columns } from './Data';
-
-import Data from '../../api/getData';
-
 import { fuzzyFilter } from './Filter';
+import assignColumnNames from '@/data-fetcher/components/DataTable/Columns';
+import { titleCase } from '@/data-fetcher/components/DataTable/helpers/helpers';
 
 const darkTheme = createTheme({
   palette: {
@@ -108,22 +106,36 @@ export interface FilterMeta {
   itemRank: RankingInfo;
 }
 
-export default function App() {
+interface IProps {
+  data: unknown[];
+}
+
+export default function App({ data }: IProps) {
   const { searchQuery, setSearchQuery } = useSearchQueryStore();
 
-  const [data, setData] = React.useState<Datatype[]>([]);
   const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
 
-  React.useEffect(() => {
-    void (async () => {
-      const data = (await Data()) as Datatype[];
-      setData([...data]);
-    })();
-  }, []);
+  const isTitleCaseColumnNames = true;
+
+  const dynamicColumns = (<T extends Record<string, unknown>>() => {
+    const keys: string[] = Object.keys(data[0] as T);
+    const columnNames: { [key in keyof T]: string } = {} as {
+      [key in keyof T]: string;
+    };
+
+    for (let i = 0, arrayLength = keys.length; i < arrayLength; i++) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      columnNames[keys[i] as keyof typeof columnNames] = isTitleCaseColumnNames
+        ? titleCase(keys[i])
+        : keys[i];
+    }
+
+    return assignColumnNames(columnNames);
+  })();
 
   const table = useReactTable({
     data,
-    columns: Columns as unknown as ColumnDef<Datatype>[],
+    columns: dynamicColumns as ColumnDef<(typeof data)[0]>[],
     filterFns: {
       fuzzy: fuzzyFilter,
     },
@@ -144,6 +156,7 @@ export default function App() {
     // debugColumns: false,
   });
 
+  const rowCounts: number[] = [5, 10, 20];
   return (
     <ThemeProvider theme={darkTheme}>
       <OrdersLayout>
@@ -233,93 +246,106 @@ export default function App() {
         <OrdersFooter>
           <PageInfoContainer>
             {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
-            <span>{table.getPrePaginationRowModel().rows.length} rows</span>
-            <span> | </span>
-            <span className="flex items-center gap-1">
-              <span>Page </span>
-              <strong>
-                {`${String(
-                  Number(table.getState().pagination.pageIndex) + 1,
-                )} of ${String(table.getPageCount())}`}
-              </strong>
-            </span>
-            <span> | </span>
-            <span className="flex items-center gap-1">
-              Go to page: &nbsp;
-              <Select
-                value={table.getState().pagination.pageIndex}
-                renderValue={(value) => value + 1}
-                onChange={(e) => {
-                  table.setPageIndex(Number(e.target.value));
-                }}
-              >
-                {Array.from({ length: table.getPageCount() }, (_, i) => (
-                  <MenuItem key={i} value={i}>
-                    Page {i + 1}
-                  </MenuItem>
-                ))}
-              </Select>
+            <span>
+              {table.getPrePaginationRowModel().rows.length}&nbsp;
+              {table.getPrePaginationRowModel().rows.length > 1
+                ? 'rows'
+                : 'row'}
             </span>
 
-            <Select
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
-              }}
-            >
-              {[5, 10, 20].map((pageSize) => (
-                <MenuItem key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </MenuItem>
-              ))}
-            </Select>
+            {table.getPrePaginationRowModel().rows.length > rowCounts[0] && (
+              <>
+                <span> | </span>
+                <span className="flex items-center gap-1">
+                  <span>Page </span>
+                  <strong>
+                    {`${String(
+                      Number(table.getState().pagination.pageIndex) + 1,
+                    )} of ${String(table.getPageCount())}`}
+                  </strong>
+                </span>
+                <span> | </span>
+                <span className="flex items-center gap-1">
+                  Go to page: &nbsp;
+                  <Select
+                    value={table.getState().pagination.pageIndex}
+                    renderValue={(value) => value + 1}
+                    onChange={(e) => {
+                      table.setPageIndex(Number(e.target.value));
+                    }}
+                  >
+                    {Array.from({ length: table.getPageCount() }, (_, i) => (
+                      <MenuItem key={i} value={i}>
+                        Page {i + 1}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </span>
+
+                <Select
+                  value={table.getState().pagination.pageSize}
+                  onChange={(e) => {
+                    table.setPageSize(Number(e.target.value));
+                  }}
+                >
+                  {rowCounts.map((pageSize) => (
+                    <MenuItem key={pageSize} value={pageSize}>
+                      Show {pageSize}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            )}
           </PageInfoContainer>
-          <PageNavigationContainer>
-            <IconButton
-              size="large"
-              aria-label="first page"
-              className="border rounded p-1"
-              onClick={() => {
-                table.setPageIndex(0);
-              }}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <FirstPageIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="previous page"
-              className="border rounded p-1"
-              onClick={() => {
-                table.previousPage();
-              }}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <NavigateBeforeIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="next page"
-              className="border rounded p-1"
-              onClick={() => {
-                table.nextPage();
-              }}
-              disabled={!table.getCanNextPage()}
-            >
-              <NavigateNextIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="last page"
-              className="border rounded p-1"
-              onClick={() => {
-                table.setPageIndex(table.getPageCount() - 1);
-              }}
-              disabled={!table.getCanNextPage()}
-            >
-              <LastPageIcon />
-            </IconButton>
-          </PageNavigationContainer>
+
+          {table.getPrePaginationRowModel().rows.length > rowCounts[0] && (
+            <PageNavigationContainer>
+              <IconButton
+                size="large"
+                aria-label="first page"
+                className="border rounded p-1"
+                onClick={() => {
+                  table.setPageIndex(0);
+                }}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <FirstPageIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="previous page"
+                className="border rounded p-1"
+                onClick={() => {
+                  table.previousPage();
+                }}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <NavigateBeforeIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="next page"
+                className="border rounded p-1"
+                onClick={() => {
+                  table.nextPage();
+                }}
+                disabled={!table.getCanNextPage()}
+              >
+                <NavigateNextIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="last page"
+                className="border rounded p-1"
+                onClick={() => {
+                  table.setPageIndex(table.getPageCount() - 1);
+                }}
+                disabled={!table.getCanNextPage()}
+              >
+                <LastPageIcon />
+              </IconButton>
+            </PageNavigationContainer>
+          )}
         </OrdersFooter>
       </OrdersLayout>
     </ThemeProvider>
@@ -330,8 +356,7 @@ export default function App() {
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 0, // Search delay
-  // ...props
+  debounce = 250, // Search delay
 }: {
   value: string | number;
   onChange: (value: string | number) => void;
@@ -342,11 +367,11 @@ function DebouncedInput({
 
   const [value, setValue] = React.useState(initialValue);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }

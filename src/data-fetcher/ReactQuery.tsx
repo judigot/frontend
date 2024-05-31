@@ -7,8 +7,8 @@ import {
 } from '@tanstack/react-query';
 
 import Data from './api/getData';
-import { isIDataType } from '@/data-fetcher/components/types/TypeGuards';
 import DataTable from '@/data-fetcher/components/DataTable';
+import { isValidDataType } from '@/data-fetcher/components/types/TypeGuards';
 
 const queryClient = new QueryClient();
 
@@ -18,9 +18,12 @@ const App = () => {
   async function getData() {
     const result = await Data();
 
-    if (!isIDataType(result)) {
-      throw new Error('Result is not of type IData[]');
+    // Check if row values have consistent typings based on the first row
+    if (Array.isArray(result) && !isValidDataType(result)) {
+      console.error('Result is not of type IData[]');
+      return;
     }
+
     return result;
   }
 
@@ -41,10 +44,10 @@ const App = () => {
     //   },
     // ],
     //==========BEHAVIOR==========//
-    gcTime: 5 * 60000, // 5 minutes cache time
-    refetchOnWindowFocus: true,
-    refetchInterval: 1 * 1000, // Refetch every n seconds
-    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
+    // gcTime: 5 * 60000, // 5 minutes cache time
+    // refetchOnWindowFocus: true,
+    // refetchInterval: 1 * 1000, // Refetch every n seconds
+    // staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
     //==========BEHAVIOR==========//
   });
 
@@ -61,14 +64,7 @@ const App = () => {
 
       {isError && <h1>Error</h1>}
 
-      {data && <DataTable />}
-
-      {/* {data?.map(({ Name, Description }) => (
-        <div key={Name}>
-          <h1>{Name}</h1>
-          <p>{Description}</p>
-        </div>
-      ))} */}
+      {Boolean(data) && Array.isArray(data) && <DataTable data={data} />}
     </>
   );
 };

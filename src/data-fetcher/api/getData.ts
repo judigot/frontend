@@ -4,6 +4,7 @@ export default async (): Promise<unknown> => {
   try {
     const response = await fetch(
       // `http://localhost:8080/api/orders`,
+      // `https://api.thecatapi.com/v1/breeds`,
       `https://dinosaur-facts-api.shultzlab.com/dinosaurs`,
       {
         // *GET, POST, PATCH, PUT, DELETE
@@ -35,5 +36,7 @@ export default async (): Promise<unknown> => {
   }
 
   // Success
+  // prettier-ignore
+  return [ { key1: 1, key2: 'Value 1', }, { key1: 2, key2: 'Value 2', }, ];
   return data;
 };
