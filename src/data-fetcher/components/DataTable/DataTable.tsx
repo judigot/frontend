@@ -107,7 +107,6 @@ export interface FilterFns {
 export interface FilterMeta {
   itemRank: RankingInfo;
 }
-// }
 
 export default function App() {
   const { searchQuery, setSearchQuery } = useSearchQueryStore();
