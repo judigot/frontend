@@ -3,12 +3,12 @@ import { Suspense } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import DataTable from '@/data-fetcher/components/DataTable';
-import { useDinoData } from '@/data-fetcher/api/getUsersData';
+import { useUserData } from '@/data-fetcher/api/getUsersData';
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const { data, isError, isLoading } = useDinoData({
+  const { data, isError, isLoading } = useUserData({
     gcTime: 5 * 60000, // 5 minutes cache time
     refetchOnWindowFocus: true,
     refetchInterval: 1 * 1000,

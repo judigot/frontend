@@ -4,7 +4,7 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-const fetchDinoData = async (): Promise<unknown> => {
+const fetchUserData = async (): Promise<unknown> => {
   let data: unknown;
 
   try {
@@ -44,12 +44,12 @@ const fetchDinoData = async (): Promise<unknown> => {
   return data;
 };
 
-export const useDinoData = (
+export const useUserData = (
   behavior?: Omit<UseQueryOptions, 'queryKey'>,
 ): UseQueryResult => {
   return useQuery({
     queryKey: ['dinoData'],
-    queryFn: fetchDinoData,
+    queryFn: fetchUserData,
     ...behavior,
   });
 };
