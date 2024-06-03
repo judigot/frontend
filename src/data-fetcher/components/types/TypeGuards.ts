@@ -4,19 +4,20 @@ interface JsonObject {
   [key: string]: JsonValue;
 }
 
-// export const isIDataType = (data: unknown): data is (typeof data)[] => {
-//   return (
-//     Array.isArray(data) &&
-//     data.every(
-//       (item) => typeof item === 'object' && item !== null,
-//       // &&
-//       // 'Name' in item &&
-//       // typeof (item as { Name: unknown }).Name === 'string' &&
-//       // 'Description' in item &&
-//       // typeof (item as { Description: unknown }).Description === 'string',
-//     )
-//   );
-// };
+export const isIDataType = (data: unknown): data is (typeof data)[] => {
+  return (
+    Array.isArray(data) &&
+    data.every(
+      (item) =>
+        typeof item === 'object' &&
+        item !== null &&
+        'Name' in item &&
+        typeof (item as { Name: unknown }).Name === 'string' &&
+        'Description' in item &&
+        typeof (item as { Description: unknown }).Description === 'string',
+    )
+  );
+};
 
 export const isValidDataType = (arr: unknown[]): boolean => {
   /* 
