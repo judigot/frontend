@@ -75,10 +75,10 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     '@typescript-eslint/naming-convention': [
       'error',
-      // {
-      //   selector: 'typeLike',
-      //   format: ['PascalCase'],
-      // },
+      {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+      },
       {
         selector: 'interface',
         format: ['PascalCase'],
