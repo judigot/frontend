@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface Props {
+interface IProps {
   index: number;
   name: string;
 }
 
-export default function App({ index }: Props): JSX.Element {
+export default function App({ index }: IProps): JSX.Element {
   React.useEffect(() => {}, []);
 
   //====================HELPER FUNCTIONS====================//

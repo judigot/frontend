@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
 
 // Define the types for the props that CountryList expects
-interface CountryListProps {
+interface ICountryListProps {
   countries: Array<
     | string
     | number
@@ -18,7 +18,7 @@ interface CountryListProps {
   >;
 }
 
-class CountryList extends Component<CountryListProps> {
+class CountryList extends Component<ICountryListProps> {
   render() {
     return (
       <Paper>

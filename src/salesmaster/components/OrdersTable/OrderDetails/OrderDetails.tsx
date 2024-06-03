@@ -6,7 +6,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-interface Props {
+interface IProps {
   items: IOrderDetails[];
 }
 
@@ -36,7 +36,7 @@ const darkTheme = createTheme({
   },
 });
 
-export const OrderDetailsTable = ({ items }: Props) => {
+export const OrderDetailsTable = ({ items }: IProps) => {
   const defVal = 0;
 
   let totalItems = defVal,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface Movie {
+interface IMovie {
   Title: string;
   Year: number;
   imdbID: string;
@@ -9,7 +9,7 @@ interface Movie {
 function MovieList() {
   const searchInputRef = React.useRef<HTMLInputElement>(null);
 
-  const [movieList, setMovieList] = React.useState<Movie[]>([]);
+  const [movieList, setMovieList] = React.useState<IMovie[]>([]);
   const [noResult, setNoResult] = React.useState(false);
 
   const handleSearch = () => {
@@ -18,7 +18,7 @@ function MovieList() {
     if (year != null) {
       fetch('https://jsonmock.hackerrank.com/api/movies?Year=' + year)
         .then((response) => response.json())
-        .then((result: { data: Movie[] }) => {
+        .then((result: { data: IMovie[] }) => {
           if (result.data.length !== 0) {
             setMovieList(result.data);
             setNoResult(false);
@@ -34,7 +34,7 @@ function MovieList() {
   };
   const movies = (
     <ul className="mt-50 styled" data-testid="movieList">
-      {movieList.map((row: Movie, i) => (
+      {movieList.map((row: IMovie, i) => (
         <li key={i}>{row.Title}</li>
       ))}
     </ul>

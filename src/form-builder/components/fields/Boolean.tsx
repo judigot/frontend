@@ -1,9 +1,9 @@
-import { BooleanField } from '@/form-builder/types/types';
+import { IBooleanField } from '@/form-builder/types/types';
 import React from 'react';
 
-interface Props extends BooleanField {}
+interface IProps extends IBooleanField {}
 
-const Boolean = ({ title, isChecked }: Props) => {
+const Boolean = ({ title, isChecked }: IProps) => {
   const [checked, setChecked] = React.useState((isChecked ?? false) || false);
 
   const handleClick = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -10,15 +10,15 @@ const queryClient = new QueryClient();
 
 import Data from './helpers/Data';
 
-interface FormData {
+interface IFormData {
   searchQuery: string | undefined;
 }
 
-interface Query {
-  queryKey: [string, FormData];
+interface IQuery {
+  queryKey: [string, IFormData];
 }
 
-export interface Quote {
+export interface IQuote {
   _id: string;
   content: string;
   author: string;
@@ -34,7 +34,7 @@ const App = () => {
 
   const searchRef = useRef<HTMLInputElement>(null);
 
-  async function getData({ queryKey }: Query) {
+  async function getData({ queryKey }: IQuery) {
     const [resource, formData] = queryKey;
 
     if (Object.keys(formData).includes('searchQuery')) {

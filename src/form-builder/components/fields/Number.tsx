@@ -1,8 +1,8 @@
-import { NumberField } from '@/form-builder/types/types';
+import { INumberField } from '@/form-builder/types/types';
 
-interface Props extends NumberField {}
+interface IProps extends INumberField {}
 
-const NumberInput = ({ title, min, max }: Props) => {
+const NumberInput = ({ title, min, max }: IProps) => {
   return (
     <div>
       <span>{title}</span>

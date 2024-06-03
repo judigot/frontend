@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
   id: number;
   first_name: string;
   last_name: string;
@@ -9,7 +9,7 @@ export interface User {
 }
 
 export default async () => {
-  let data: User | User[] | undefined = undefined;
+  let data: IUser | IUser[] | undefined = undefined;
 
   try {
     const response = await fetch(`http://localhost:5000/api/users`, {
@@ -23,7 +23,7 @@ export default async () => {
       // body: JSON.stringify({ key: "value" }),
     });
     if (response.ok) {
-      data = response.json() as unknown as User;
+      data = response.json() as unknown as IUser;
     } else {
       throw new Error(`HTTP error: ${String(response)}`);
     }

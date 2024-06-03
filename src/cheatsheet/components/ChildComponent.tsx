@@ -1,6 +1,6 @@
 import React, { Dispatch, useEffect } from 'react';
 
-interface Person {
+interface IPerson {
   id?: number;
   firstName?: string;
   lastName?: string; // ? means optional
@@ -9,7 +9,7 @@ interface Person {
   readonly type?: string; // Value cannot be changed once declared
 }
 
-const student: Person = {
+const student: IPerson = {
   id: 13105179,
   firstName: 'Jude Francis',
   lastName: 'Igot',
@@ -19,7 +19,7 @@ const student: Person = {
 student.id = 1; // Can be changed
 // student["type"] = "alien"; // Readonly. Can't be changed
 
-export const ChildComponent = (props: Person) => {
+export const ChildComponent = (props: IPerson) => {
   useEffect(() => {
     console.log('Initial code: child');
   }, []);

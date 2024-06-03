@@ -1,6 +1,6 @@
-type JsonValue = string | number | boolean | null | JsonArray | JsonObject;
-interface JsonArray extends Array<JsonValue> {}
-interface JsonObject {
+type JsonValue = string | number | boolean | null | IJSONArray | IJSONObject;
+interface IJSONArray extends Array<JsonValue> {}
+interface IJSONObject {
   [key: string]: JsonValue;
 }
 
@@ -35,7 +35,7 @@ export const isValidDataType = (arr: unknown[]): boolean => {
   if (arr.length === 0) return true;
 
   // Infer the structure from the first item in the array
-  const firstItem = arr[0] as JsonObject;
+  const firstItem = arr[0] as IJSONObject;
 
   // Get the keys of the first object and determine the types of the values associated with each key
   const keys = Object.keys(firstItem);
@@ -53,7 +53,7 @@ export const isValidDataType = (arr: unknown[]): boolean => {
       typeof item === 'object' &&
       item !== null &&
       keys.every((key, index) =>
-        isType((item as JsonObject)[key], types[index]),
+        isType((item as IJSONObject)[key], types[index]),
       ),
   );
 };

@@ -1,11 +1,11 @@
-import { DropdownField } from '@/form-builder/types/types';
+import { IDropdownField } from '@/form-builder/types/types';
 import { useState } from 'react';
 
-interface Props extends DropdownField {}
+interface IProps extends IDropdownField {}
 
-const Dropdown = ({ title, options, default: defaultValue }: Props) => {
+const Dropdown = ({ title, options, default: defaultValue }: IProps) => {
   const [selected, setSelected] =
-    useState<DropdownField['default']>(defaultValue);
+    useState<IDropdownField['default']>(defaultValue);
 
   return (
     <div>

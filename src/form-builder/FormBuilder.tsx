@@ -2,10 +2,10 @@ import Text from './components/fields/Text';
 import Number from './components/fields/Number';
 import Boolean from './components/fields/Boolean';
 import Dropdown from './components/fields/Dropdown';
-import { MasterField } from '@/form-builder/types/types';
+import { IMasterField } from '@/form-builder/types/types';
 
-interface Props {
-  form: MasterField[];
+interface IProps {
+  form: IMasterField[];
 }
 
 /* USAGE
@@ -41,10 +41,10 @@ interface Props {
 />
 */
 
-const FormBuilder = ({ form }: Props) => {
+const FormBuilder = ({ form }: IProps) => {
   return (
     <>
-      {form.map((field: MasterField, i: number) => {
+      {form.map((field: IMasterField, i: number) => {
         switch (field.type) {
           case 'text':
             return (

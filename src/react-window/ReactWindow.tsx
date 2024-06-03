@@ -3,7 +3,7 @@ import { VariableSizeList as List } from 'react-window';
 
 import Data from './helpers/Data';
 
-interface Datatype {
+interface IDatatype {
   id: number;
   'Column 1': string;
   order_id: number;
@@ -15,7 +15,7 @@ interface Datatype {
 }
 
 export function ReactWindow() {
-  const [data, setInitialData] = React.useState<Datatype[]>();
+  const [data, setInitialData] = React.useState<IDatatype[]>();
 
   React.useEffect(() => {
     // Initial render
@@ -24,7 +24,7 @@ export function ReactWindow() {
     }
 
     async function getData() {
-      const result = (await Data()) as Datatype[];
+      const result = (await Data()) as IDatatype[];
       setInitialData(result);
     }
   }, [data]);

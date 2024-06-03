@@ -1,6 +1,6 @@
 import React from "react";
 
-interface Props {
+interface IProps {
   isPasswordCorrect?: boolean;
 }
 
@@ -18,7 +18,7 @@ function Home(): JSX.Element {
   );
 }
 
-export default function Login({ isPasswordCorrect }: Props): JSX.Element {
+export default function Login({ isPasswordCorrect }: IProps): JSX.Element {
   const [isAuth, setIsAuth] = React.useState<boolean>(
     isPasswordCorrect ?? false
   );

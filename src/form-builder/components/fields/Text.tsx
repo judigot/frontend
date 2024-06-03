@@ -1,8 +1,8 @@
-import { TextField } from '@/form-builder/types/types';
+import { ITextField } from '@/form-builder/types/types';
 
-interface Props extends TextField {}
+interface IProps extends ITextField {}
 
-const TextInput = ({ title, maxLength }: Props) => {
+const TextInput = ({ title, maxLength }: IProps) => {
   return (
     <div>
       <span>{title}</span>

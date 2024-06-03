@@ -1,9 +1,9 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 
-import { Datatype } from './Data';
+import { IDatatype } from './Data';
 import { IOrderDetails } from '@/salesmaster/components/OrdersTable/OrderDetails/OrderDetails';
 
-const columnHelper = createColumnHelper<Datatype>();
+const columnHelper = createColumnHelper<IDatatype>();
 
 // Visible columns
 const defaultColumnNames: { [key: string]: string } = {
@@ -17,7 +17,7 @@ export const assignColumnNames = (
   columnNames: { [key: string]: string } = defaultColumnNames,
 ) => {
   const columns: ColumnDef<
-    Datatype,
+    IDatatype,
     number | string | IOrderDetails[] | Date
   >[] = [];
 
@@ -30,7 +30,7 @@ export const assignColumnNames = (
     const columnName: string = columnNames[key[i]];
     columns.push(
       columnHelper.accessor(
-        (row: Datatype) => {
+        (row: IDatatype) => {
           return row[key[i]];
         },
         {

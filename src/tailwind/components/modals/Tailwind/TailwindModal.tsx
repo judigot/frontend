@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface Props {
+interface IProps {
   action: () => void;
 }
 
-const Tailwind = ({ action }: Props) => {
+const Tailwind = ({ action }: IProps) => {
   const [showModal, setShowModal] = React.useState(false);
   const executeCommand = () => {
     action();

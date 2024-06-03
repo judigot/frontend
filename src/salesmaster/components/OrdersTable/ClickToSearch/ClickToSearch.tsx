@@ -20,12 +20,12 @@ const ClickableStyled = styled.div`
   }
 `;
 
-export interface Props {
+export interface IProps {
   item: string;
   forCustomer?: boolean;
   forDate?: boolean;
 }
-export const Clickable = ({ item, forCustomer, forDate }: Props) => {
+export const Clickable = ({ item, forCustomer, forDate }: IProps) => {
   const dispatch = useDispatch();
   return (
     <ClickableStyled

@@ -99,10 +99,10 @@ const SearchBarContainer = styled.div`
 `;
 
 // declare module '@tanstack/table-core' {
-export interface FilterFns {
+export interface IFilterFns {
   fuzzy: FilterFn<unknown>;
 }
-export interface FilterMeta {
+export interface IFilterMeta {
   itemRank: RankingInfo;
 }
 

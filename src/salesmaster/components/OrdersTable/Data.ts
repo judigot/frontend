@@ -1,7 +1,7 @@
 import { IOrderDetails } from '@/salesmaster/components/OrdersTable/OrderDetails/OrderDetails';
 import { assignColumnNames } from './CustomColumns';
 
-export interface Datatype {
+export interface IDatatype {
   order_id: number;
   customer_id: number;
   customer: string;

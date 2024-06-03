@@ -1,9 +1,9 @@
-interface Props {
+interface IProps {
   name: string;
   age?: number;
 }
 
-const Boilerplate = ({ name, age }: Props) => {
+const Boilerplate = ({ name, age }: IProps) => {
   return (
     <div>
       <p>Name: {name}</p>

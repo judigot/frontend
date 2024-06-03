@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface Stock {
+interface IStock {
   open?: number;
   close?: number;
   high?: number;
@@ -10,7 +10,7 @@ interface Stock {
 export default function StockData() {
   const searchInput = React.useRef<HTMLInputElement>(null);
 
-  const [stockList, setStockList] = React.useState<Stock[]>([]);
+  const [stockList, setStockList] = React.useState<IStock[]>([]);
   const [noResult, setNoResult] = React.useState(false);
 
   const handleSearch = () => {
@@ -19,7 +19,7 @@ export default function StockData() {
     if (date != null) {
       fetch('https://jsonmock.hackerrank.com/api/stocks?date=' + date)
         .then((response) => response.json())
-        .then((result: { data: Stock[] }) => {
+        .then((result: { data: IStock[] }) => {
           if (result.data.length) {
             setStockList(result.data);
             setNoResult(false);
@@ -57,7 +57,7 @@ export default function StockData() {
         </button>
       </section>
 
-      {stockList.map((row: Stock, i) => (
+      {stockList.map((row: IStock, i) => (
         <ul
           key={i}
           className="mt-50 slide-up-fade-in styled"

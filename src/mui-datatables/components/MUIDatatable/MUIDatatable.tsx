@@ -7,9 +7,9 @@ import TableCell from '@mui/material/TableCell';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 
-import Data, { User } from '../../helpers/Data';
+import Data, { IUser } from '../../helpers/Data';
 
-interface Props {
+interface IProps {
   title: string;
   customColumnNames?: MUIDataTableColumnDef[];
   data: object[];
@@ -20,7 +20,7 @@ const muiCache = createCache({
   prepend: true,
 });
 
-export default function MUIDatatable({ title, customColumnNames }: Props) {
+export default function MUIDatatable({ title, customColumnNames }: IProps) {
   // const [responsive, setResponsive] = useState('vertical');
   const [tableBodyHeight] = useState('100%');
   const [tableBodyMaxHeight] = useState<string>('1000%');
@@ -46,7 +46,7 @@ export default function MUIDatatable({ title, customColumnNames }: Props) {
 
   const oldCellValue = useRef<string>('');
 
-  function extractData(result: User[]) {
+  function extractData(result: IUser[]) {
     const array = result;
     const dataColumnNames = Object.keys(array[0]);
     const rowValues = [];
@@ -62,7 +62,7 @@ export default function MUIDatatable({ title, customColumnNames }: Props) {
 
   const fetchFreshData = useCallback(async () => {
     try {
-      const result = (await Data()) as unknown as User[];
+      const result = (await Data()) as unknown as IUser[];
       const { dataColumnNames, rowValues } = extractData(result);
       setColumnNames(customColumnNames ?? dataColumnNames);
       setRowValues(rowValues);
@@ -113,7 +113,7 @@ export default function MUIDatatable({ title, customColumnNames }: Props) {
             body: JSON.stringify({ searchQuery: query }),
           })
             .then((response) => response.json())
-            .then((result: User[]) => {
+            .then((result: IUser[]) => {
               // Success
               if (result.length !== 0) {
                 setRowValues(extractData(result).rowValues);

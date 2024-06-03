@@ -73,21 +73,17 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    // '@typescript-eslint/naming-convention': [
-    //   'error',
-    //   {
-    //     selector: 'function',
-    //     format: ['camelCase'],
-    //   },
-    //   {
-    //     selector: 'typeLike',
-    //     format: ['PascalCase'],
-    //   },
-    //   {
-    //     selector: 'interface',
-    //     format: ['PascalCase'],
-    //     prefix: ['I'],
-    //   },
-    // ],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      // {
+      //   selector: 'typeLike',
+      //   format: ['PascalCase'],
+      // },
+      {
+        selector: 'interface',
+        format: ['PascalCase'],
+        prefix: ['I'],
+      },
+    ],
   },
 };

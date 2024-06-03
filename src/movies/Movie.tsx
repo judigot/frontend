@@ -19,12 +19,12 @@ const VoteAverage = styled.span`
   float: right;
 `;
 
-interface Props {
+interface IProps {
   movie: IMovie;
   isOverviewVisible: boolean;
 }
 
-const MovieComponent = ({ movie, isOverviewVisible }: Props) => {
+const MovieComponent = ({ movie, isOverviewVisible }: IProps) => {
   const row = movie;
   return (
     <Movie>

@@ -13,13 +13,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-interface Props {
+interface IProps {
   payload?: { [key: string]: string };
 }
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
-const User = ({ payload }: Props) => {
+const User = ({ payload }: IProps) => {
   const user = payload;
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,

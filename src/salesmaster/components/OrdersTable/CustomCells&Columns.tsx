@@ -2,11 +2,11 @@ import { createColumnHelper } from '@tanstack/react-table';
 
 import OrderDetailsTable from './OrderDetails/OrderDetails';
 import ClickToSearch from './ClickToSearch';
-import { Datatype } from './Data';
+import { IDatatype } from './Data';
 
 import { formatDate } from './helpers';
 
-const columnHelper = createColumnHelper<Datatype>();
+const columnHelper = createColumnHelper<IDatatype>();
 
 // Visible columns
 export default [

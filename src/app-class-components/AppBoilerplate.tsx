@@ -4,21 +4,21 @@ import styled from 'styled-components';
 import ChildComponent from './components/Component';
 import Data from './utils/Data';
 
-type Props = {
+interface IProps {
   counter?: number;
-};
+}
 
 type State = {
   count: number;
   data?: object | string;
 };
 
-export default class ExampleComponent extends React.Component<Props, State> {
+export default class ExampleComponent extends React.Component<IProps, State> {
   static defaultProps = {
     counter: 1000,
   };
 
-  constructor(props: Props) {
+  constructor(props: IProps) {
     super(props);
     this.state = { count: 0, data: 'Loading' };
   }
@@ -28,7 +28,7 @@ export default class ExampleComponent extends React.Component<Props, State> {
     this.setState({ data });
   }
 
-  componentDidUpdate(_prevProps: Props, prevState: State) {
+  componentDidUpdate(_prevProps: IProps, prevState: State) {
     if (this.state.count !== prevState.count) {
       
       console.log('Count state has changed.');

@@ -49,7 +49,7 @@ import styled from 'styled-components';
 // import Filter from "./DefaultFilter";
 
 // Salesmaster table
-import Data, { Datatype } from './Data';
+import Data, { IDatatype } from './Data';
 import Columns from './CustomCells&Columns';
 import Filter from './CustomCells&ColumnsFilter';
 
@@ -112,15 +112,15 @@ const SearchBarContainer = styled.div`
 `;
 
 // declare module '@tanstack/table-core' {
-export interface FilterFns {
+export interface IFilterFns {
   fuzzy: FilterFn<unknown>;
 }
-export interface FilterMeta {
+export interface IFilterMeta {
   itemRank: RankingInfo;
 }
 // }
 
-const fuzzyFilter: FilterFn<Datatype> = (
+const fuzzyFilter: FilterFn<IDatatype> = (
   row,
   _columnId,
   searchInput: string,
@@ -168,19 +168,19 @@ export default function App() {
     (state: RootState) => state.searchQuery.query,
   );
 
-  const [data, setData] = React.useState<Datatype[]>([]);
+  const [data, setData] = React.useState<IDatatype[]>([]);
   const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
 
   React.useEffect(() => {
     void (async () => {
-      const data = (await Data()) as Datatype[];
+      const data = (await Data()) as IDatatype[];
       setData([...data]);
     })();
   }, []);
 
   const table = useReactTable({
     data,
-    columns: Columns as unknown as ColumnDef<Datatype>[],
+    columns: Columns as unknown as ColumnDef<IDatatype>[],
     filterFns: {
       fuzzy: fuzzyFilter,
     },
