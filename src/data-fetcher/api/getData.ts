@@ -5,7 +5,8 @@ export default async (): Promise<unknown> => {
     const response = await fetch(
       // `http://localhost:8080/api/orders`,
       // `https://api.thecatapi.com/v1/breeds`,
-      `https://dinosaur-facts-api.shultzlab.com/dinosaurs`,
+      // `https://dinosaur-facts-api.shultzlab.com/dinosaurs`,
+      `https://jsonplaceholder.typicode.com/users`,
       {
         // *GET, POST, PATCH, PUT, DELETE
         method: 'GET',
