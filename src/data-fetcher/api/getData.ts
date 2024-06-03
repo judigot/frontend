@@ -36,7 +36,5 @@ export default async (): Promise<unknown> => {
   }
 
   // Success
-  // prettier-ignore
-  return [ { key1: 1, key2: 'Value 1', }, { key1: 2, key2: 'Value 2', }, ];
   return data;
 };
