@@ -73,8 +73,22 @@ module.exports = {
     'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }],
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
+    'react/jsx-pascal-case': 'error',
     '@typescript-eslint/naming-convention': [
       'error',
+      {
+        selector: 'function',
+        format: ['camelCase', 'PascalCase'],
+      },
+      {
+        selector: 'function',
+        modifiers: ['exported'],
+        format: ['PascalCase'],
+      },
+      {
+        selector: 'class',
+        format: ['PascalCase'],
+      },
       {
         selector: 'typeLike',
         format: ['PascalCase'],
