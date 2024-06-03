@@ -156,7 +156,7 @@ export default function App({ data }: IProps) {
     // debugColumns: false,
   });
 
-  const rowCounts: number[] = [5, 10, 20];
+  const numOfRows: number[] = [5, 10, 20];
   return (
     <ThemeProvider theme={darkTheme}>
       <OrdersLayout>
@@ -253,7 +253,7 @@ export default function App({ data }: IProps) {
                 : 'row'}
             </span>
 
-            {table.getPrePaginationRowModel().rows.length > rowCounts[0] && (
+            {table.getPrePaginationRowModel().rows.length > numOfRows[0] && (
               <>
                 <span> | </span>
                 <span className="flex items-center gap-1">
@@ -288,7 +288,7 @@ export default function App({ data }: IProps) {
                     table.setPageSize(Number(e.target.value));
                   }}
                 >
-                  {rowCounts.map((pageSize) => (
+                  {numOfRows.map((pageSize) => (
                     <MenuItem key={pageSize} value={pageSize}>
                       Show {pageSize}
                     </MenuItem>
@@ -298,7 +298,7 @@ export default function App({ data }: IProps) {
             )}
           </PageInfoContainer>
 
-          {table.getPrePaginationRowModel().rows.length > rowCounts[0] && (
+          {table.getPrePaginationRowModel().rows.length > numOfRows[0] && (
             <PageNavigationContainer>
               <IconButton
                 size="large"
