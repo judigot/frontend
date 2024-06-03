@@ -79,13 +79,13 @@ const App: FC = () => {
   };
 
   const sort = (sortType: string) => {
-    const vote_average = 'vote_average'; // 1st priority
+    const voteAverage = 'vote_average'; // 1st priority
     const sortByPopularity = 'popularity'; // 2nd priority
 
     const sortedMovies = structuredClone(movies)?.sort((a, b) => {
       return (
         (sortType === 'asc' ? 1 : -1) * // Negate result for descending
-        (a[vote_average] - b[vote_average] || // Main priority
+        (a[voteAverage] - b[voteAverage] || // Main priority
           a[sortByPopularity] - b[sortByPopularity]) // Use another category if the former category values are equal
       );
     });

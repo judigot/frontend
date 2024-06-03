@@ -1,4 +1,4 @@
-export default function App(): JSX.Element {
+export default function App() {
   //====================HELPER FUNCTIONS====================//
   // Function expression syntax to save memory
   //====================HELPER FUNCTIONS====================//

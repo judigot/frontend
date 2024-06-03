@@ -4,7 +4,7 @@ interface IData {
   message: string;
 }
 
-function App(): JSX.Element {
+function App() {
   const [data, setData] = React.useState<IData | undefined>(undefined);
 
   useEffect(() => {

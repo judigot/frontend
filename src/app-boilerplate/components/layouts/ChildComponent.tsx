@@ -5,7 +5,7 @@ interface IProps {
   name: string;
 }
 
-export default function App({ index }: IProps): JSX.Element {
+export default function App({ index }: IProps) {
   React.useEffect(() => {}, []);
 
   //====================HELPER FUNCTIONS====================//

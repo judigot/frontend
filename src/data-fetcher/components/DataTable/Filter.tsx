@@ -57,5 +57,3 @@ export const fuzzyFilter: FilterFn<unknown> = (
   // Check if the sanitized row string includes the sanitized search input
   return normalizedRowContent.includes(normalizedSearchInput);
 };
-
-export default normalizeCellValue;

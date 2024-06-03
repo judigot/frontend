@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
 interface IProps {
   isPasswordCorrect?: boolean;
 }
 
-function Admin(): JSX.Element {
+function Admin() {
   return (
     <div data-testid="admin-container">
       <span>Hello, Admin</span>
@@ -12,18 +12,18 @@ function Admin(): JSX.Element {
   );
 }
 
-function Home(): JSX.Element {
+function Home() {
   return (
     <div data-testid="home-container">Do you have an account? Log in!</div>
   );
 }
 
-export default function Login({ isPasswordCorrect }: IProps): JSX.Element {
+export default function Login({ isPasswordCorrect }: IProps) {
   const [isAuth, setIsAuth] = React.useState<boolean>(
-    isPasswordCorrect ?? false
+    isPasswordCorrect ?? false,
   );
   return (
-    <div style={{ width: "min-content" }}>
+    <div style={{ width: 'min-content' }}>
       <section className="layer-desk">
         {isAuth && <Admin />}
         {!isAuth && <Home />}
