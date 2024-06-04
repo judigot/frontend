@@ -113,7 +113,7 @@ interface IProps {
 export default function App({ data }: IProps) {
   const { searchQuery, setSearchQuery } = useSearchQueryStore();
 
-  const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
+  // const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
 
   const isTitleCaseColumnNames = true;
 
@@ -140,9 +140,9 @@ export default function App({ data }: IProps) {
       fuzzy: fuzzyFilter,
     },
     state: {
-      globalFilter,
+      globalFilter: searchQuery,
     },
-    onGlobalFilterChange: setGlobalFilter,
+    onGlobalFilterChange: setSearchQuery,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -166,7 +166,6 @@ export default function App({ data }: IProps) {
               value={searchQuery}
               onChange={(value) => {
                 setSearchQuery(String(value));
-                setGlobalFilter(String(value));
               }}
               placeholder="Search"
             />
@@ -249,6 +248,10 @@ export default function App({ data }: IProps) {
           <PageInfoContainer>
             {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
             <span>
+              {table.getState().pagination.pageSize <
+                table.getPrePaginationRowModel().rows.length && (
+                <>Showing {table.getState().pagination.pageSize} of&nbsp;</>
+              )}
               {table.getPrePaginationRowModel().rows.length}&nbsp;
               {table.getPrePaginationRowModel().rows.length > 1
                 ? 'rows'
