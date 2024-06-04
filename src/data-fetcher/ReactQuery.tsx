@@ -8,7 +8,7 @@ import {
 
 import Data from './api/getData';
 import DataTable from '@/data-fetcher/components/DataTable';
-import { isValidDataType } from '@/data-fetcher/components/types/TypeGuards';
+// import { isValidDataType } from '@/data-fetcher/components/types/TypeGuards';
 
 const queryClient = new QueryClient();
 
@@ -19,10 +19,10 @@ const App = () => {
     const result = await Data();
 
     // Check if row values have consistent typings based on the first row
-    if (Array.isArray(result) && !isValidDataType(result)) {
-      console.error('Result is not of type IData[]');
-      return;
-    }
+    // if (Array.isArray(result) && !isValidDataType(result)) {
+    //   console.error('Result is not of type IData[]');
+    //   return;
+    // }
 
     return result;
   }
@@ -57,16 +57,16 @@ const App = () => {
   // prettier-ignore
   useEffect(() => { if (isSuccess) { console.log('Success!'); } }, [dataUpdatedAt, isSuccess]);
 
-  return (
-    <>
-      {/* If there's no initialData, you can use isLoading */}
-      {isLoading && <h1>Loading</h1>}
+  // If there's no initialData, you can use isLoading
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
-      {isError && <h1>Error</h1>}
+  if (isError) {
+    return <h1>Error</h1>;
+  }
 
-      {Boolean(data) && Array.isArray(data) && <DataTable data={data} />}
-    </>
-  );
+  return Boolean(data) && Array.isArray(data) && <DataTable data={data} />;
 };
 
 export const ReactQuery = () => {
