@@ -3,8 +3,8 @@ type JsonValue =
   | number
   | boolean
   | null
-  | (string | number | boolean | null)[]
-  | Record<string, string | number | boolean | null>;
+  | JsonValue[]
+  | { [key: string]: JsonValue };
 type IJSONObject = Record<string, JsonValue>;
 
 export const isIDataType = (data: unknown): data is (typeof data)[] => {
@@ -55,8 +55,9 @@ export const isValidDataType = (arr: unknown[]): boolean => {
     (item) =>
       typeof item === 'object' &&
       item !== null &&
-      keys.every((key, index) =>
-        isType((item as IJSONObject)[key], types[index]),
-      ),
+      keys.every((key, index) => {
+        const value = (item as IJSONObject)[key];
+        return value === null || isType(value, types[index]);
+      }),
   );
 };
