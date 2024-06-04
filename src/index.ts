@@ -49,6 +49,30 @@ app.get('/api/users', (_req: Request, res: Response) =>
   ]),
 );
 
+import PostgreSQL from 'pg-pool';
+app.get('/api/v1/users', (_req: Request, res: Response) => {
+  const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
+  pool
+    .connect()
+    .then((client) => {
+      return client
+        .query('SELECT * FROM "users" LIMIT 10;')
+        .then((result) => {
+          const users: unknown[] = result.rows;
+          client.release();
+          res.json(users);
+        })
+        .catch((err: unknown) => {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+        });
+    })
+    .catch((err: unknown) => {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(
