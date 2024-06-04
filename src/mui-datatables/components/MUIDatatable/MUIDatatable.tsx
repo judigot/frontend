@@ -39,7 +39,7 @@ export default function MUIDatatable({ title, customColumnNames }: IProps) {
   );
 
   const [rowValues, setRowValues] = useState<
-    Array<object | string[] | number[]>
+    (object | string[] | number[])[]
   >([]);
 
   const columnNameAliases = useRef<HTMLElement[]>([]);
@@ -82,7 +82,7 @@ export default function MUIDatatable({ title, customColumnNames }: IProps) {
   const options: object = {
     //==========AJAX==========//
     // serverSide: true,
-    onTableChange: (action: string, state: { [key: string]: string }) => {
+    onTableChange: (action: string, state: Record<string, string>) => {
       console.dir(action);
       // setIsLOading(true);
 
@@ -122,7 +122,7 @@ export default function MUIDatatable({ title, customColumnNames }: IProps) {
               }
               setIsLOading(false);
             })
-            .catch(() => {});
+            .catch(() => {return false});
         }, 1000);
       }
       if (action === 'search' && !state.searchText) {

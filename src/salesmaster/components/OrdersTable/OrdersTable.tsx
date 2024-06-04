@@ -229,7 +229,7 @@ export default function App() {
                             <>
                               <div
                                 role="button"
-                                onKeyDown={() => {}}
+                                onKeyDown={() => {return false}}
                                 tabIndex={0}
                                 aria-label="Close modal"
                                 className={

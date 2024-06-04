@@ -185,7 +185,9 @@ export default function App({ data }: IProps) {
                             <>
                               <div
                                 role="button"
-                                onKeyDown={() => {}}
+                                onKeyDown={() => {
+                                  return false;
+                                }}
                                 tabIndex={0}
                                 aria-label="Close modal"
                                 className={

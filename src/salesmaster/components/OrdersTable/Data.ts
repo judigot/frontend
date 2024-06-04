@@ -51,11 +51,11 @@ export const DefaultColumns = await (async () => {
   try {
     const data = (await Data()) as unknown as object[];
     const keys: string[] = Object.keys(data[0]);
-    const columnNames: { [key: string]: string } = {};
+    const columnNames: Record<string, string> = {};
 
     for (let i = 0, arrayLength = keys.length; i < arrayLength; i++) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      columnNames[keys[i] as keyof typeof columnNames] = isTitleCaseColumnNames
+      columnNames[keys[i]] = isTitleCaseColumnNames
         ? titleCase(keys[i])
         : keys[i];
     }

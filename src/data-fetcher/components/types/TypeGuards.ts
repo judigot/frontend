@@ -1,8 +1,11 @@
-type JsonValue = string | number | boolean | null | IJSONArray | IJSONObject;
-interface IJSONArray extends Array<JsonValue> {}
-interface IJSONObject {
-  [key: string]: JsonValue;
-}
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | (string | number | boolean | null)[]
+  | Record<string, string | number | boolean | null>;
+type IJSONObject = Record<string, JsonValue>;
 
 export const isIDataType = (data: unknown): data is (typeof data)[] => {
   return (

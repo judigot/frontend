@@ -6,7 +6,7 @@ import { FilterFn } from '@tanstack/react-table';
  * and other types to strings.
  */
 function normalizeCellValue(
-  cellValue: Date | string | Array<string | number | object> | object,
+  cellValue: Date | string | (string | number | object)[] | object,
 ): string {
   if (cellValue instanceof Date) {
     return cellValue.toISOString();
@@ -44,7 +44,7 @@ export const fuzzyFilter: FilterFn<unknown> = (
         cell.getValue() as
           | Date
           | string
-          | Array<string | number | object>
+          | (string | number | object)[]
           | object,
       ),
     )

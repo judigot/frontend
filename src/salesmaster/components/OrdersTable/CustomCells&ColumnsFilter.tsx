@@ -3,7 +3,7 @@ import { IOrderDetails } from './OrderDetails/OrderDetails';
 import { formatDate } from './helpers';
 
 export function CustomCellsAndColumnsFilter(
-  cellValue: Date | string | Array<string | number | object> | object,
+  cellValue: Date | string | (string | number | object)[] | object,
   columnName: string,
   _cell: {
     column: { columnDef: { cell: () => void } };
@@ -26,9 +26,9 @@ export function CustomCellsAndColumnsFilter(
   if (columnName === 'Order Products') {
     const orderDetails: string[] = [];
     const value = cellValue;
-    let totalItems: number = 0;
-    let totalAmount: number = 0;
-    let totalProfit: number = 0;
+    let totalItems = 0;
+    let totalAmount = 0;
+    let totalProfit = 0;
 
     (value as IOrderDetails[]).map(
       ({

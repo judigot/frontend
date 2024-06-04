@@ -35,7 +35,7 @@ class App extends Component<object, IAppState> {
         <center>
           <h1>Country Filter</h1>
           <Search handleChange={this.search}></Search>
-          <CountryList countries={filteredCountries || countries}></CountryList>
+          <CountryList countries={filteredCountries ?? countries}></CountryList>
         </center>
       </div>
     );

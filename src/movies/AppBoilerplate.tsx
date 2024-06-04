@@ -64,8 +64,12 @@ const App: FC = () => {
         setMoviesStatus(mutatedStatus);
         setMovies(movies);
       })
-      .catch(() => {})
-      .finally(() => {});
+      .catch(() => {
+        return false;
+      })
+      .finally(() => {
+        return false;
+      });
   }, []);
 
   const toggleAllOverviews = (isOverviewVisible: boolean) => {
@@ -149,7 +153,9 @@ const App: FC = () => {
                 toggleMovieOverview(row.id);
               }}
               role="button"
-              onKeyDown={() => {}}
+              onKeyDown={() => {
+                return false;
+              }}
               tabIndex={0}
               aria-label="Close modal"
             >

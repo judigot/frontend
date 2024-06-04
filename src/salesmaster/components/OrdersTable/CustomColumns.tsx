@@ -6,7 +6,7 @@ import { IOrderDetails } from '@/salesmaster/components/OrdersTable/OrderDetails
 const columnHelper = createColumnHelper<IDatatype>();
 
 // Visible columns
-const defaultColumnNames: { [key: string]: string } = {
+const defaultColumnNames: Record<string, string> = {
   order_id: 'Order ID',
   customer: 'Customer',
   order_product: 'Order Products',
@@ -14,7 +14,7 @@ const defaultColumnNames: { [key: string]: string } = {
 };
 
 export const assignColumnNames = (
-  columnNames: { [key: string]: string } = defaultColumnNames,
+  columnNames: Record<string, string> = defaultColumnNames,
 ) => {
   const columns: ColumnDef<
     IDatatype,

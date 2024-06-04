@@ -1,6 +1,6 @@
 import { INumberField } from '@/form-builder/types/types';
 
-interface IProps extends INumberField {}
+type IProps = INumberField
 
 const NumberInput = ({ title, min, max }: IProps) => {
   return (

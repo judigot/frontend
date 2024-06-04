@@ -37,7 +37,9 @@ export const App = () => {
     })();
 
     // Cleanup function
-    return () => {};
+    return () => {
+      setInitialData(undefined);
+    };
   }, []);
 
   React.useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 
 export default function Counter() {
-  const initialDependency: number = 2;
+  const initialDependency = 2;
 
   const [message, setMessage] = React.useState<string>(() => {
     return ``;
@@ -13,7 +13,7 @@ export default function Counter() {
   const timerRef = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
-    clearTimeout(timerRef.current as NodeJS.Timeout);
+    clearTimeout(timerRef.current);
     timerRef.current = setTimeout(function () {
       // Reset state
       setMessage(``);

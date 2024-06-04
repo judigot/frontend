@@ -1,7 +1,7 @@
 import { IDropdownField } from '@/form-builder/types/types';
 import { useState } from 'react';
 
-interface IProps extends IDropdownField {}
+type IProps = IDropdownField
 
 const Dropdown = ({ title, options, default: defaultValue }: IProps) => {
   const [selected, setSelected] =
@@ -18,8 +18,7 @@ const Dropdown = ({ title, options, default: defaultValue }: IProps) => {
           setSelected(e.target.value);
         }}
       >
-        {options &&
-          options.map((option: string, i: number) => {
+        {options?.map((option: string, i: number) => {
             return (
               <option key={i} value={option}>
                 {option}

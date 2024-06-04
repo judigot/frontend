@@ -1,7 +1,7 @@
 import { IBooleanField } from '@/form-builder/types/types';
 import React from 'react';
 
-interface IProps extends IBooleanField {}
+type IProps = IBooleanField
 
 const Boolean = ({ title, isChecked }: IProps) => {
   const [checked, setChecked] = React.useState((isChecked ?? false) || false);

@@ -6,16 +6,14 @@ import Paper from '@mui/material/Paper';
 
 // Define the types for the props that CountryList expects
 interface ICountryListProps {
-  countries: Array<
-    | string
+  countries: (| string
     | number
     | boolean
     | ReactElement
     | Iterable<ReactNode>
     | ReactPortal
     | null
-    | undefined
-  >;
+    | undefined)[];
 }
 
 class CountryList extends Component<ICountryListProps> {
@@ -37,7 +35,7 @@ class CountryList extends Component<ICountryListProps> {
               i: Key | null | undefined,
             ) => {
               return (
-                <ListItem key={i as React.Key}>
+                <ListItem key={i}>
                   <ListItemText primary={element} />
                 </ListItem>
               );

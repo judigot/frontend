@@ -8,12 +8,12 @@ interface IProps {
   counter?: number;
 }
 
-type State = {
+interface IState {
   count: number;
   data?: object | string;
-};
+}
 
-export default class ExampleComponent extends React.Component<IProps, State> {
+export default class ExampleComponent extends React.Component<IProps, IState> {
   static defaultProps = {
     counter: 1000,
   };
@@ -28,7 +28,7 @@ export default class ExampleComponent extends React.Component<IProps, State> {
     this.setState({ data });
   }
 
-  componentDidUpdate(_prevProps: IProps, prevState: State) {
+  componentDidUpdate(_prevProps: IProps, prevState: IState) {
     if (this.state.count !== prevState.count) {
       
       console.log('Count state has changed.');

@@ -1,5 +1,5 @@
 export function DefaultFilter(
-  cellValue: Date | string | Array<string | number | object> | object,
+  cellValue: Date | string | (string | number | object)[] | object,
   _columnName: string,
   _cell: {
     column: { columnDef: { cell: () => void } };

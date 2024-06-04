@@ -3,12 +3,12 @@ import { createColumnHelper } from '@tanstack/react-table';
 const columnHelper = createColumnHelper<unknown[]>();
 
 // Visible columns
-const customColumnNames: { [key: string]: string } = {
+const customColumnNames: Record<string, string> = {
   column_name: 'Custom Column Name',
 };
 
 export const assignColumnNames = (
-  columnNames: { [key: string]: string } = customColumnNames,
+  columnNames: Record<string, string> = customColumnNames,
 ) => {
   const columns = [];
 

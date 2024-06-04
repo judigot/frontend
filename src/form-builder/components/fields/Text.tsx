@@ -1,6 +1,6 @@
 import { ITextField } from '@/form-builder/types/types';
 
-interface IProps extends ITextField {}
+type IProps = ITextField
 
 const TextInput = ({ title, maxLength }: IProps) => {
   return (

@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
 interface IProps {
-  payload?: { [key: string]: string };
+  payload?: Record<string, string>;
 }
 
 const pages = ['Products', 'Pricing', 'Blog'];
@@ -181,12 +181,12 @@ const User = ({ payload }: IProps) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="1" onClick={() => {}}>
+              <MenuItem key="1" onClick={() => {return false}}>
                 <Typography textAlign="center">
                   Change Admin Password
                 </Typography>
               </MenuItem>
-              <MenuItem key="2" onClick={() => {}}>
+              <MenuItem key="2" onClick={() => {return false}}>
                 <Typography textAlign="center">Change POS Password</Typography>
               </MenuItem>
               <MenuItem key="logout" onClick={handleLogout}>
