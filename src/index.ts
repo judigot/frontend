@@ -50,13 +50,52 @@ app.get('/api/users', (_req: Request, res: Response) =>
 );
 
 import PostgreSQL from 'pg-pool';
-app.get('/api/v1/users', (_req: Request, res: Response) => {
+app.get('/api/v1/users', (req: Request, res: Response) => {
+  const selectedColumns: string[] = [
+    'id',
+    'first_name',
+    'last_name',
+    'email',
+    'gender',
+  ];
+
+  const { page = '1', limit = '10', search = '' } = req.query;
+
+  const offset = (Number(page) - 1) * Number(limit);
+
+  const searchParams =
+    search !== '' ? [search, offset, Number(limit)] : [offset, Number(limit)];
+
+  const searchCondition =
+    search !== ''
+      ? // ? `WHERE search_vector @@ plainto_tsquery('english', $1)`
+        `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
+      : '';
+
   const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
   pool
     .connect()
     .then((client) => {
+      const queryString = `SELECT ${selectedColumns.join(', ')} FROM "users" ${searchCondition} ORDER BY id ${
+        search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`
+      };`;
+
+      // Construct the final query string manually for logging
+      const finalQuery =
+        search !== ''
+          ? queryString
+              .replace('$1', `'${String(searchParams[0])}'`)
+              .replace('$2', String(searchParams[1]))
+              .replace('$3', String(searchParams[2]))
+          : queryString
+              .replace('$1', String(searchParams[0]))
+              .replace('$2', String(searchParams[1]));
+
+      // Log the final query string
+      console.log('Query:', finalQuery);
+
       return client
-        .query('SELECT * FROM "users" LIMIT 10;')
+        .query(queryString, searchParams)
         .then((result) => {
           const users: unknown[] = result.rows;
           client.release();

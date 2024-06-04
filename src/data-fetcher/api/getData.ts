@@ -1,9 +1,14 @@
 export default async (): Promise<unknown> => {
   let data: unknown;
 
+  const page = 1;
+  const limit = 100;
+  const search = 'johndoe@gmail.com';
+
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/users`,
+      `http://localhost:5000/api/v1/users?page=${String(page)}&limit=${String(limit)}&search=${encodeURIComponent(search)}`,
+      // `http://localhost:5000/api/v1/users`,
       // `http://localhost:8080/api/orders`,
       // `https://api.thecatapi.com/v1/breeds`,
       // `https://dinosaur-facts-api.shultzlab.com/dinosaurs`,
