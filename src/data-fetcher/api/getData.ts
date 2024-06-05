@@ -1,13 +1,11 @@
-export default async (query = ''): Promise<unknown> => {
-  let data: unknown;
+import { ITableInfo } from '@/data-fetcher/components/DataTable/store';
 
-  const page = 1;
-  const limit = 100;
-  const search = query;
+export default async ({ query, page, limit }: ITableInfo): Promise<unknown> => {
+  let data: unknown;
 
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/users?page=${String(page)}&limit=${String(limit)}&search=${encodeURIComponent(search)}`,
+      `http://localhost:5000/api/v1/users?search=${encodeURIComponent(query)}&page=${String(page)}&limit=${String(limit)}`,
       // `http://localhost:5000/api/v1/users`,
       // `http://localhost:8080/api/orders`,
       // `https://api.thecatapi.com/v1/breeds`,

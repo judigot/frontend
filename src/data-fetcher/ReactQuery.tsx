@@ -6,46 +6,42 @@ import {
   useQuery,
 } from '@tanstack/react-query';
 
-import Data from './api/getData';
 import DataTable from '@/data-fetcher/components/DataTable';
 import { useDataTableStore } from '@/data-fetcher/components/DataTable/store';
 
 const queryClient = new QueryClient();
 
+interface IDataType {
+  total_rows: number;
+  rows: Record<string, unknown>[];
+}
+
 const App = () => {
-  const { searchQuery, setData } = useDataTableStore();
-
-  async function getData() {
-    const result = await Data(searchQuery);
-
-    setData(result);
-
-    return result;
-  }
+  const { searchQuery, data, getData, 
+    // setData
+   } = useDataTableStore();
 
   const {
-    data = undefined,
+    // data = undefined,
     isError,
-    isSuccess,
+    // isSuccess,
     isLoading,
-    dataUpdatedAt,
+    // dataUpdatedAt,
     // refetch,
   } = useQuery({
     queryKey: ['users', searchQuery],
     queryFn: getData, // Function to fetch data
-    //==========BEHAVIOR==========//
-    gcTime: 5 * 60000, // 5 minutes cache time
-    refetchOnWindowFocus: true,
-    refetchInterval: 1 * 1000, // Refetch every n seconds
-    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
-    //==========BEHAVIOR==========//
+    // gcTime: 5 * 60000, // 5 minutes cache time
+    // refetchOnWindowFocus: true,
+    // refetchInterval: 1 * 1000, // Refetch every n seconds
+    // staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
   });
 
   // prettier-ignore
   useEffect(() => { if (isError) { console.log('There was an error!'); } }, [isError]);
 
   // prettier-ignore
-  useEffect(() => { if (isSuccess) { setData(data) } }, [data, dataUpdatedAt, isSuccess, setData]);
+  // useEffect(() => { if (isSuccess) { setData(data) } }, [data, dataUpdatedAt, isSuccess, setData]);
 
   // If there's no initialData, you can use isLoading
   if (isLoading) {
@@ -56,15 +52,17 @@ const App = () => {
     return <h1>Error</h1>;
   }
 
-  if (isSuccess) {
-    if (Boolean(data) && Array.isArray(data) && data.length > 0) {
-      return <DataTable data={data} />;
-    } else {
-      return <DataTable data={[{}]} />;
-    }
+  if (Boolean(data) && Array.isArray(data) && data.length > 0) {
+    return (
+      <DataTable
+        totalRows={(data as IDataType[])[0]?.total_rows ?? 0}
+        data={(data as IDataType[])[0]?.rows ?? []}
+      />
+    );
+    // return <DataTable data={data[0].rows ?? [{}]} />;
+  } else {
+    return <DataTable data={[{}]} />;
   }
-
-  return null; // Added to handle the case where no conditions are met
 };
 
 export const ReactQuery = () => {

@@ -76,9 +76,20 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
   pool
     .connect()
     .then((client) => {
-      const queryString = `SELECT ${selectedColumns.join(', ')} FROM "users" ${searchCondition} ORDER BY id ${
-        search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`
-      };`;
+      const queryString = `
+      SELECT (
+        SELECT COUNT(*)
+        FROM users
+      ) AS total_rows,
+      (
+        SELECT json_agg(rows)
+    FROM (
+        SELECT ${selectedColumns.join(', ')} FROM "users" ${searchCondition} ORDER BY id ${
+          search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`
+        }
+      ) as rows
+      ) AS rows;
+      `;
 
       // Construct the final query string manually for logging
       const finalQuery =

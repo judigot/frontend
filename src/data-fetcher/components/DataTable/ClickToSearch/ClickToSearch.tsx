@@ -26,12 +26,17 @@ export interface IProps {
   forDate?: boolean;
 }
 export const Clickable = ({ item, forCustomer, forDate }: IProps) => {
-  const { setSearchQuery } = useDataTableStore();
+  const { searchQuery, setSearchQuery } = useDataTableStore();
 
   return (
     <ClickableStyled
       onClick={() => {
-        setSearchQuery(item);
+        setSearchQuery({
+          ...searchQuery,
+          ...{
+            query: String(item),
+          },
+        });
         setTimeout(() => {
           (
             document.querySelector(

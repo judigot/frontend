@@ -47,10 +47,11 @@ const darkTheme = createTheme({
 });
 
 interface IProps {
+  totalRows?: number;
   data: unknown[];
 }
 
-export default function App({ data }: IProps) {
+export default function App({ totalRows = undefined, data }: IProps) {
   const { searchQuery, setSearchQuery } = useDataTableStore();
 
   const isTitleCaseColumnNames = true;
@@ -77,7 +78,7 @@ export default function App({ data }: IProps) {
     enableColumnFilters: false,
     filterFns: {}, // For column filtering
     state: {
-      globalFilter: searchQuery,
+      globalFilter: searchQuery.query,
     },
     globalFilterFn: exactMatchFilter,
     onGlobalFilterChange: setSearchQuery,
@@ -91,6 +92,33 @@ export default function App({ data }: IProps) {
   });
 
   const numOfRows: number[] = [5, 10, 20];
+
+  const currentPage: number = table.getState().pagination.pageIndex + 1;
+
+  const resultsLength = table.getPrePaginationRowModel().rows.length;
+
+  const actualRowCount = totalRows ?? resultsLength;
+
+  // const totalPages =
+  //   totalRows !== undefined
+  //     ? totalRows / table.getState().pagination.pageSize
+  //     : table.getPageCount();
+
+  const pageSize = table.getState().pagination.pageSize;
+  const totalPages = (() => {
+    if (searchQuery.query !== '') {
+      return Math.ceil(data.length / pageSize);
+    }
+
+    if (totalRows !== undefined) {
+      return Math.ceil(totalRows / pageSize);
+    }
+
+    return table.getPageCount();
+  })();
+
+  const visibleRowsCount = table.getRowModel().rows.length;
+
   return (
     <ThemeProvider theme={darkTheme}>
       <div
@@ -112,9 +140,14 @@ export default function App({ data }: IProps) {
         >
           <div style={{ padding: 20, textAlign: 'center' }}>
             <DebouncedInput
-              value={searchQuery}
+              value={searchQuery.query}
               onChange={(value) => {
-                setSearchQuery(String(value));
+                setSearchQuery({
+                  ...searchQuery,
+                  ...{
+                    query: String(value),
+                  },
+                });
               }}
               placeholder="Search"
             />
@@ -218,25 +251,18 @@ export default function App({ data }: IProps) {
           >
             {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
             <span>
-              {table.getState().pagination.pageSize <
-                table.getPrePaginationRowModel().rows.length && (
-                <>Showing {table.getState().pagination.pageSize} of&nbsp;</>
-              )}
-              {table.getPrePaginationRowModel().rows.length}&nbsp;
-              {table.getPrePaginationRowModel().rows.length > 1
-                ? 'rows'
-                : 'row'}
+              {resultsLength && <>Showing {visibleRowsCount} of&nbsp;</>}
+              {actualRowCount}&nbsp;
+              {resultsLength > 1 ? 'rows' : 'row'}
             </span>
 
-            {table.getPrePaginationRowModel().rows.length > numOfRows[0] && (
+            {resultsLength > numOfRows[0] && (
               <>
                 <span> | </span>
                 <span className="flex items-center gap-1">
                   <span>Page </span>
                   <strong>
-                    {`${String(
-                      Number(table.getState().pagination.pageIndex) + 1,
-                    )} of ${String(table.getPageCount())}`}
+                    {`${String(currentPage)} of ${String(totalPages)}`}
                   </strong>
                 </span>
                 <span> | </span>
@@ -246,10 +272,16 @@ export default function App({ data }: IProps) {
                     value={table.getState().pagination.pageIndex}
                     renderValue={(value) => value + 1}
                     onChange={(e) => {
+                      setSearchQuery({
+                        ...searchQuery,
+                        ...{
+                          page: Number(e.target.value),
+                        },
+                      });
                       table.setPageIndex(Number(e.target.value));
                     }}
                   >
-                    {Array.from({ length: table.getPageCount() }, (_, i) => (
+                    {Array.from({ length: totalPages }, (_, i) => (
                       <MenuItem key={i} value={i}>
                         Page {i + 1}
                       </MenuItem>
@@ -273,7 +305,7 @@ export default function App({ data }: IProps) {
             )}
           </div>
 
-          {table.getPrePaginationRowModel().rows.length > numOfRows[0] && (
+          {resultsLength > numOfRows[0] && (
             <div
               style={{
                 padding: 20,
@@ -287,9 +319,16 @@ export default function App({ data }: IProps) {
                 aria-label="first page"
                 className="border rounded p-1"
                 onClick={() => {
-                  table.setPageIndex(0);
+                  const targetPage = 1;
+                  table.setPageIndex(targetPage - 1);
+                  setSearchQuery({
+                    ...searchQuery,
+                    ...{
+                      page: targetPage,
+                    },
+                  });
                 }}
-                disabled={!table.getCanPreviousPage()}
+                disabled={currentPage === 1}
               >
                 <FirstPageIcon />
               </IconButton>
@@ -300,7 +339,7 @@ export default function App({ data }: IProps) {
                 onClick={() => {
                   table.previousPage();
                 }}
-                disabled={!table.getCanPreviousPage()}
+                disabled={!(currentPage > 1)}
               >
                 <NavigateBeforeIcon />
               </IconButton>
@@ -311,7 +350,7 @@ export default function App({ data }: IProps) {
                 onClick={() => {
                   table.nextPage();
                 }}
-                disabled={!table.getCanNextPage()}
+                disabled={!(currentPage < totalPages)}
               >
                 <NavigateNextIcon />
               </IconButton>
@@ -320,9 +359,16 @@ export default function App({ data }: IProps) {
                 aria-label="last page"
                 className="border rounded p-1"
                 onClick={() => {
-                  table.setPageIndex(table.getPageCount() - 1);
+                  const targetPage = totalPages;
+                  table.setPageIndex(targetPage - 1);
+                  setSearchQuery({
+                    ...searchQuery,
+                    ...{
+                      page: targetPage,
+                    },
+                  });
                 }}
-                disabled={!table.getCanNextPage()}
+                disabled={currentPage === totalPages}
               >
                 <LastPageIcon />
               </IconButton>
