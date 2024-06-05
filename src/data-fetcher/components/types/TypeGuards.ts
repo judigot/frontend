@@ -23,6 +23,19 @@ export const isIDataType = (data: unknown): data is (typeof data)[] => {
 };
 
 export const isValidDataType = (arr: unknown[]): boolean => {
+  /* Usage:
+    async function getData() {
+    const result = await Data();
+
+    // Check if row values have consistent typings based on the first row
+    if (Array.isArray(result) && !isValidDataType(result)) {
+      console.error('Result is not of type IData[]');
+      return;
+    }
+
+    return result;
+  }
+   */
   /* 
   This function checks the type of a value. 
   It handles arrays and null values separately from primitive types.

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import {
   QueryClient,
@@ -8,21 +8,17 @@ import {
 
 import Data from './api/getData';
 import DataTable from '@/data-fetcher/components/DataTable';
-// import { isValidDataType } from '@/data-fetcher/components/types/TypeGuards';
+import { useDataTableStore } from '@/data-fetcher/components/DataTable/store';
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const searchRef = useRef<HTMLInputElement>(null);
+  const { searchQuery, setData } = useDataTableStore();
 
   async function getData() {
-    const result = await Data();
+    const result = await Data(searchQuery);
 
-    // Check if row values have consistent typings based on the first row
-    // if (Array.isArray(result) && !isValidDataType(result)) {
-    //   console.error('Result is not of type IData[]');
-    //   return;
-    // }
+    setData(result);
 
     return result;
   }
@@ -35,19 +31,13 @@ const App = () => {
     dataUpdatedAt,
     // refetch,
   } = useQuery({
-    queryKey: ['users', { searchQuery: searchRef.current?.value }],
+    queryKey: ['users', searchQuery],
     queryFn: getData, // Function to fetch data
-    // initialData: [
-    //   {
-    //     Name: 'Loading',
-    //     Description: 'Loading',
-    //   },
-    // ],
     //==========BEHAVIOR==========//
-    // gcTime: 5 * 60000, // 5 minutes cache time
-    // refetchOnWindowFocus: true,
-    // refetchInterval: 1 * 1000, // Refetch every n seconds
-    // staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
+    gcTime: 5 * 60000, // 5 minutes cache time
+    refetchOnWindowFocus: true,
+    refetchInterval: 1 * 1000, // Refetch every n seconds
+    staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
     //==========BEHAVIOR==========//
   });
 
@@ -55,18 +45,26 @@ const App = () => {
   useEffect(() => { if (isError) { console.log('There was an error!'); } }, [isError]);
 
   // prettier-ignore
-  useEffect(() => { if (isSuccess) { console.log('Success!'); } }, [dataUpdatedAt, isSuccess]);
+  useEffect(() => { if (isSuccess) { setData(data) } }, [data, dataUpdatedAt, isSuccess, setData]);
 
   // If there's no initialData, you can use isLoading
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <DataTable data={[{}]} />;
   }
 
   if (isError) {
     return <h1>Error</h1>;
   }
 
-  return Boolean(data) && Array.isArray(data) && <DataTable data={data} />;
+  if (isSuccess) {
+    if (Boolean(data) && Array.isArray(data) && data.length > 0) {
+      return <DataTable data={data} />;
+    } else {
+      return <DataTable data={[{}]} />;
+    }
+  }
+
+  return null; // Added to handle the case where no conditions are met
 };
 
 export const ReactQuery = () => {

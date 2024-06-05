@@ -1,9 +1,9 @@
-export default async (): Promise<unknown> => {
+export default async (query = ''): Promise<unknown> => {
   let data: unknown;
 
   const page = 1;
   const limit = 100;
-  const search = '';
+  const search = query;
 
   try {
     const response = await fetch(

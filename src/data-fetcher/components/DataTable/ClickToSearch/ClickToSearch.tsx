@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
-import { useSearchQueryStore } from '@/data-fetcher/components/DataTable/store';
+import { useDataTableStore } from '@/data-fetcher/components/DataTable/store';
 
 const ClickableStyled = styled.div`
   font-family: sans-serif;
@@ -26,7 +26,7 @@ export interface IProps {
   forDate?: boolean;
 }
 export const Clickable = ({ item, forCustomer, forDate }: IProps) => {
-  const { setSearchQuery } = useSearchQueryStore();
+  const { setSearchQuery } = useDataTableStore();
 
   return (
     <ClickableStyled

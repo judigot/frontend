@@ -17,7 +17,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import { useSearchQueryStore } from './store';
+import { useDataTableStore } from './store';
 
 import {
   useReactTable,
@@ -51,7 +51,7 @@ interface IProps {
 }
 
 export default function App({ data }: IProps) {
-  const { searchQuery, setSearchQuery } = useSearchQueryStore();
+  const { searchQuery, setSearchQuery } = useDataTableStore();
 
   const isTitleCaseColumnNames = true;
 
