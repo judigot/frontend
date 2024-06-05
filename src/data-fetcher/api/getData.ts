@@ -3,7 +3,7 @@ export default async (): Promise<unknown> => {
 
   const page = 1;
   const limit = 100;
-  const search = 'johndoe@gmail.com';
+  const search = '';
 
   try {
     const response = await fetch(

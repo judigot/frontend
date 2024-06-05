@@ -30,7 +30,7 @@ function normalizeString(str: string): string {
  * Sanitizes the row string and the search input by removing spaces and converting to uppercase.
  * Checks if the search input is included in the row string.
  */
-export const fuzzyFilter: FilterFn<unknown> = (
+export const exactMatchFilter: FilterFn<unknown> = (
   row,
   _columnId,
   searchInput: string,

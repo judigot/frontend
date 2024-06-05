@@ -28,19 +28,15 @@ import {
   getFacetedMinMaxValues,
   getPaginationRowModel,
   getSortedRowModel,
-  FilterFn,
   flexRender,
   ColumnDef,
 } from '@tanstack/react-table';
 
-import { RankingInfo } from '@tanstack/match-sorter-utils';
 import TextField from '@mui/material/TextField/TextField';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import styled from 'styled-components';
-
-import { fuzzyFilter } from './Filter';
+import { exactMatchFilter } from './Filter';
 import assignColumnNames from '@/data-fetcher/components/DataTable/Columns';
 import { titleCase } from '@/data-fetcher/components/DataTable/helpers/helpers';
 
@@ -50,70 +46,12 @@ const darkTheme = createTheme({
   },
 });
 
-const OrdersLayout = styled.div`
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  color: white !important;
-  height: 100px;
-  width: 100%;
-  background-color: black;
-`;
-const OrdersSearch = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  width: 100%;
-`;
-const OrdersBody = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  background-color: black;
-  height: 100%;
-  width: 100%;
-`;
-const OrdersFooter = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  background-color: black;
-  width: 100%;
-`;
-
-const PageInfoContainer = styled.div`
-  color: white;
-  padding: 20px;
-  margin: auto 0% auto 0%;
-`;
-
-const PageNavigationContainer = styled.div`
-  /* background-color: black; */
-  padding: 20px;
-  text-align: right;
-  position: relative;
-  float: right;
-`;
-
-const SearchBarContainer = styled.div`
-  /* width: 100%; */
-  /* background-color: black; */
-  padding: 20px;
-  text-align: center;
-`;
-
-// declare module '@tanstack/table-core' {
-export interface IFilterFns {
-  fuzzy: FilterFn<unknown>;
-}
-export interface IFilterMeta {
-  itemRank: RankingInfo;
-}
-
 interface IProps {
   data: unknown[];
 }
 
 export default function App({ data }: IProps) {
   const { searchQuery, setSearchQuery } = useSearchQueryStore();
-
-  // const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
 
   const isTitleCaseColumnNames = true;
 
@@ -136,14 +74,13 @@ export default function App({ data }: IProps) {
   const table = useReactTable({
     data,
     columns: dynamicColumns as ColumnDef<(typeof data)[0]>[],
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
+    enableColumnFilters: false,
+    filterFns: {}, // For column filtering
     state: {
       globalFilter: searchQuery,
     },
+    globalFilterFn: exactMatchFilter,
     onGlobalFilterChange: setSearchQuery,
-    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -151,17 +88,29 @@ export default function App({ data }: IProps) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
-    // debugTable: true,
-    // debugHeaders: true,
-    // debugColumns: false,
   });
 
   const numOfRows: number[] = [5, 10, 20];
   return (
     <ThemeProvider theme={darkTheme}>
-      <OrdersLayout>
-        <OrdersSearch>
-          <SearchBarContainer>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateRows: 'repeat(3, 1fr)',
+          color: 'red !important',
+          height: 100,
+          width: '100%',
+          backgroundColor: 'black',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(1, 1fr)',
+            width: '100%',
+          }}
+        >
+          <div style={{ padding: 20, textAlign: 'center' }}>
             <DebouncedInput
               value={searchQuery}
               onChange={(value) => {
@@ -169,9 +118,17 @@ export default function App({ data }: IProps) {
               }}
               placeholder="Search"
             />
-          </SearchBarContainer>
-        </OrdersSearch>
-        <OrdersBody>
+          </div>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(1, 1fr)',
+            backgroundColor: 'black',
+            height: '100%',
+            width: '100%',
+          }}
+        >
           <TableContainer style={{ height: 400 }} component={Paper}>
             <Table stickyHeader>
               <TableHead>
@@ -189,6 +146,10 @@ export default function App({ data }: IProps) {
                                 }}
                                 tabIndex={0}
                                 aria-label="Close modal"
+                                style={{
+                                  cursor: 'pointer',
+                                  width: 'max-content',
+                                }}
                                 className={
                                   header.column.getCanSort()
                                     ? 'cursor-pointer select-none'
@@ -205,8 +166,8 @@ export default function App({ data }: IProps) {
                                   <i>
                                     {
                                       {
-                                        asc: '(Ascending)',
-                                        desc: '(Descending)',
+                                        asc: ' (Ascending)',
+                                        desc: ' (Descending)',
                                       }[header.column.getIsSorted() as string]
                                     }
                                   </i>
@@ -243,9 +204,18 @@ export default function App({ data }: IProps) {
               </TableBody>
             </Table>
           </TableContainer>
-        </OrdersBody>
-        <OrdersFooter>
-          <PageInfoContainer>
+        </div>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            backgroundColor: 'black',
+            width: '100%',
+          }}
+        >
+          <div
+            style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
+          >
             {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
             <span>
               {table.getState().pagination.pageSize <
@@ -301,10 +271,17 @@ export default function App({ data }: IProps) {
                 </Select>
               </>
             )}
-          </PageInfoContainer>
+          </div>
 
           {table.getPrePaginationRowModel().rows.length > numOfRows[0] && (
-            <PageNavigationContainer>
+            <div
+              style={{
+                padding: 20,
+                textAlign: 'right',
+                position: 'relative',
+                float: 'right',
+              }}
+            >
               <IconButton
                 size="large"
                 aria-label="first page"
@@ -349,10 +326,10 @@ export default function App({ data }: IProps) {
               >
                 <LastPageIcon />
               </IconButton>
-            </PageNavigationContainer>
+            </div>
           )}
-        </OrdersFooter>
-      </OrdersLayout>
+        </div>
+      </div>
     </ThemeProvider>
   );
 }
@@ -399,7 +376,7 @@ function DebouncedInput({
         id: 'searchInput',
         style: {
           width: '100%',
-          backgroundColor: 'darkblue',
+          backgroundColor: 'black',
           textAlign: 'center',
         },
         debounce: 1000,
