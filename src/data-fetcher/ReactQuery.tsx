@@ -56,7 +56,7 @@ const App = () => {
     return (
       <DataTable
         totalRows={(data as IDataType[])[0]?.total_rows ?? 0}
-        data={(data as IDataType[])[0]?.rows ?? []}
+        data={(data as IDataType[])[0]?.rows ?? [{}]}
       />
     );
     // return <DataTable data={data[0].rows ?? [{}]} />;
