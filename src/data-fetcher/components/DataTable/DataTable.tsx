@@ -395,10 +395,6 @@ function DebouncedInput({
   const [value, setValue] = React.useState(initialValue);
 
   useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
