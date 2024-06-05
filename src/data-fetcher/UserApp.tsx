@@ -7,7 +7,7 @@ import { useUserData } from '@/data-fetcher/api/getUsersData';
 
 const queryClient = new QueryClient();
 
-const App = () => {
+function App() {
   const { data, isError, isLoading } = useUserData({
     //==========BEHAVIOR==========//
     gcTime: 5 * 60000, // 5 minutes cache time
@@ -27,7 +27,7 @@ const App = () => {
   }
 
   return Boolean(data) && Array.isArray(data) && <DataTable data={data} />;
-};
+}
 
 export const ReactQuery = () => {
   return (

@@ -29,7 +29,7 @@ export interface IQuote {
   dateModified: Date;
 }
 
-const App = () => {
+function App() {
   const [message, setMessage] = useState<string>(``);
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -120,7 +120,7 @@ const App = () => {
       </Suspense>
     </>
   );
-};
+}
 
 export const ReactQuery = () => {
   return (

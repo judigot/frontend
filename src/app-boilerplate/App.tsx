@@ -12,7 +12,7 @@ const H1Styled = styled.h1`
 `;
 //==========STYLE==========//
 
-export const App = () => {
+export function App() {
   // const [count, setCount] = React.useState<number>(0);
 
   const [number, setNumber] = React.useState<number>(expensiveCalculation);
@@ -71,6 +71,6 @@ export const App = () => {
       </div>
     </>
   );
-};
+}
 
 export default App;

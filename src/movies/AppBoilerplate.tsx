@@ -1,7 +1,5 @@
 import React from 'react';
 
-import type { FC } from 'react';
-
 import styled from 'styled-components';
 
 import MovieComponent from './Movie';
@@ -37,7 +35,7 @@ interface IMovieStatus {
   [key: number]: boolean;
 }
 
-const App: FC = () => {
+function App() {
   const [movieStatuses, setMoviesStatus] = React.useState<IMovieStatus>({});
   const [movies, setMovies] = React.useState<IMovie[]>();
 
@@ -170,6 +168,6 @@ const App: FC = () => {
       </Movies>
     </>
   );
-};
+}
 
 export default App;

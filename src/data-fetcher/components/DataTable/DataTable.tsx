@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -149,7 +149,6 @@ export default function App({ totalRows = undefined, data }: IProps) {
                   },
                 });
               }}
-              placeholder="Search"
             />
           </div>
         </div>
@@ -380,57 +379,52 @@ export default function App({ totalRows = undefined, data }: IProps) {
   );
 }
 
-// A debounced input react component
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 250, // Search delay
-}: {
+interface IDebouncedInputProps {
   value: string;
   onChange: (value: string) => void;
   debounce?: number;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const timer = useRef<NodeJS.Timeout | null>(null);
+}
 
-  const [value, setValue] = React.useState(initialValue);
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 250,
+}: IDebouncedInputProps) {
+  const [value, setValue] = useState(initialValue);
+  const debounceTimeout = useRef<number | undefined>(undefined);
 
-  useEffect(() => {
-    if (timer.current) {
-      clearTimeout(timer.current);
-    }
-
-    timer.current = setTimeout(() => {
-      onChange(value);
-    }, debounce);
-
-    return () => {
-      if (timer.current) {
-        clearTimeout(timer.current);
+  const debouncedChangeHandler = useCallback(
+    (newValue: string) => {
+      if (debounceTimeout.current !== undefined) {
+        clearTimeout(debounceTimeout.current);
       }
-    };
-  }, [debounce, onChange, value]);
+      debounceTimeout.current = window.setTimeout(() => {
+        onChange(newValue);
+      }, debounce);
+    },
+    [onChange, debounce],
+  );
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setValue(newValue);
+    debouncedChangeHandler(newValue);
+  };
 
   return (
     <TextField
       inputProps={{
         autoFocus: true,
-        id: 'searchInput',
         style: {
-          width: '100%',
           backgroundColor: 'black',
           textAlign: 'center',
         },
-        debounce: 1000,
-        value,
-        onChange: (e: React.FormEvent<HTMLInputElement>) => {
-          if (timer.current) {
-            clearTimeout(timer.current);
-            setValue(e.currentTarget.value);
-          }
-        },
+        debounce,
       }}
-      id="filled-basic"
-      label="Search"
+      id="searchInput"
+      label={'Search'}
+      value={value}
+      onChange={handleChange}
       variant="outlined"
     />
   );

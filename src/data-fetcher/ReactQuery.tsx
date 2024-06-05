@@ -16,10 +16,13 @@ interface IDataType {
   rows: Record<string, unknown>[];
 }
 
-const App = () => {
-  const { searchQuery, data, getData, 
+function App() {
+  const {
+    searchQuery,
+    data,
+    getData,
     // setData
-   } = useDataTableStore();
+  } = useDataTableStore();
 
   const {
     // data = undefined,
@@ -63,7 +66,7 @@ const App = () => {
   } else {
     return <DataTable data={[{}]} />;
   }
-};
+}
 
 export const ReactQuery = () => {
   return (
