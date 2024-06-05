@@ -386,8 +386,8 @@ function DebouncedInput({
   onChange,
   debounce = 250, // Search delay
 }: {
-  value: string | number;
-  onChange: (value: string | number) => void;
+  value: string;
+  onChange: (value: string) => void;
   debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   // let timer: NodeJS.Timeout | undefined = undefined;
