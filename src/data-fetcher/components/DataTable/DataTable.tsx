@@ -336,7 +336,9 @@ export default function DataTable({
               value={searchQuery.limit}
               onChange={(e) => {
                 const newPageSize = Number(e.target.value);
-                setSearchQuery({ limit: newPageSize });
+                const newTotalPages = Math.ceil((totalRecords ?? 0) / newPageSize);
+                const newPage = Math.min(searchQuery.page, newTotalPages);
+                setSearchQuery({ limit: newPageSize, page: newPage });
                 table.setPageSize(newPageSize);
               }}
             >
@@ -346,7 +348,6 @@ export default function DataTable({
                 </MenuItem>
               ))}
             </Select>
-            {/* <span> | </span> */}
             &nbsp;
           </div>
 
