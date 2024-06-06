@@ -102,16 +102,15 @@ export default function DataTable({
   const actualRowCount = totalRecords ?? (isLoading ? '' : resultsLength);
   const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
-    if (!isLoading) {
-      if (searchQuery.query !== '') {
-        return Math.ceil(data.length / pageSize);
-      }
-
-      if (totalRecords !== undefined) {
-        return Math.ceil(totalRecords / pageSize);
-      }
-      return table.getPageCount();
+    if (searchQuery.query !== '') {
+      return Math.ceil(data.length / pageSize);
     }
+
+    if (totalRecords !== undefined) {
+      return Math.ceil(totalRecords / pageSize);
+    }
+
+    return table.getPageCount();
   })();
   const visibleRowsCount = table.getRowModel().rows.length;
 
@@ -335,7 +334,11 @@ export default function DataTable({
               value={searchQuery.limit}
               onChange={(e) => {
                 const newPageSize = Number(e.target.value);
-                setSearchQuery({ limit: newPageSize });
+                const newTotalPages = Math.ceil(
+                  (totalRecords ?? 0) / newPageSize,
+                );
+                const newPage = Math.min(searchQuery.page, newTotalPages);
+                setSearchQuery({ limit: newPageSize, page: newPage });
                 table.setPageSize(newPageSize);
               }}
             >
@@ -377,8 +380,10 @@ export default function DataTable({
               aria-label="previous page"
               className="border rounded p-1"
               onClick={() => {
+                const targetPage = Math.max(searchQuery.page - 1, 1);
+                table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  page: searchQuery.page - 1,
+                  page: targetPage,
                 });
               }}
               disabled={pageNumber === 1}
@@ -390,8 +395,10 @@ export default function DataTable({
               aria-label="next page"
               className="border rounded p-1"
               onClick={() => {
+                const targetPage = Math.min(searchQuery.page + 1, totalPages);
+                table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  page: searchQuery.page + 1,
+                  page: targetPage,
                 });
               }}
               disabled={pageNumber === totalPages}
@@ -403,8 +410,10 @@ export default function DataTable({
               aria-label="last page"
               className="border rounded p-1"
               onClick={() => {
+                const targetPage = totalPages;
+                table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  page: totalPages,
+                  page: targetPage,
                 });
               }}
               disabled={pageNumber === totalPages}

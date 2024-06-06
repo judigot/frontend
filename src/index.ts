@@ -61,14 +61,9 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
 
   const { page = '1', limit = '100', search = '' } = req.query;
 
-  const offset = (Number(page) - 1) * Number(limit);
-
-  const searchParams =
-    search !== '' ? [search, offset, Number(limit)] : [offset, Number(limit)];
-
   const searchCondition =
     search !== ''
-      ? // ? `WHERE search_vector @@ plainto_tsquery('english', $1)`
+      ? // Use full-text search for the search condition
         `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
       : '';
 
@@ -76,41 +71,73 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
   pool
     .connect()
     .then((client) => {
-      const queryString = `
-      SELECT (
-        SELECT COUNT(*)
-        FROM users
-      ) AS total_rows,
-      (
-        SELECT json_agg(rows)
-    FROM (
-        SELECT ${selectedColumns.join(', ')} FROM "users" ${searchCondition} ORDER BY id ${
-          search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`
-        }
-      ) as rows
-      ) AS rows;
+      // First query to get the total number of rows
+      const countQuery = `
+        SELECT COUNT(*) AS total_rows 
+        FROM users 
+        ${searchCondition}
       `;
 
-      // Construct the final query string manually for logging
-      const finalQuery =
-        search !== ''
-          ? queryString
-              .replace('$1', `'${String(searchParams[0])}'`)
-              .replace('$2', String(searchParams[1]))
-              .replace('$3', String(searchParams[2]))
-          : queryString
-              .replace('$1', String(searchParams[0]))
-              .replace('$2', String(searchParams[1]));
+      interface ICountResult {
+        total_rows: number;
+      }
+      client
+        .query<ICountResult>(countQuery, search !== '' ? [search] : [])
+        .then((countResult) => {
+          const totalRows = countResult.rows[0].total_rows;
+          const totalPages = Math.ceil(totalRows / Number(limit));
 
-      // Log the final query string
-      console.log('Query:', finalQuery);
+          // Adjust the page if it exceeds total pages
+          const validPage = Math.min(Number(page), totalPages);
+          const validOffset = (validPage - 1) * Number(limit);
 
-      return client
-        .query(queryString, searchParams)
-        .then((result) => {
-          const users: unknown[] = result.rows;
-          client.release();
-          res.json(users);
+          const queryString = `
+            SELECT (
+              SELECT COUNT(*)
+              FROM users
+            ) AS total_rows,
+            (
+              SELECT json_agg(rows)
+              FROM (
+                SELECT ${selectedColumns.join(', ')} 
+                FROM "users" 
+                ${searchCondition} 
+                ORDER BY id 
+                ${search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`}
+              ) as rows
+            ) AS rows;
+          `;
+
+          const searchParams =
+            search !== ''
+              ? [search, validOffset, Number(limit)]
+              : [validOffset, Number(limit)];
+
+          // Construct the final query string manually for logging
+          const finalQuery =
+            search !== ''
+              ? queryString
+                  .replace('$1', `'${String(searchParams[0])}'`)
+                  .replace('$2', String(searchParams[1]))
+                  .replace('$3', String(searchParams[2]))
+              : queryString
+                  .replace('$1', String(searchParams[0]))
+                  .replace('$2', String(searchParams[1]));
+
+          // Log the final query string
+          console.log('Query:', finalQuery);
+
+          return client
+            .query(queryString, searchParams)
+            .then((result) => {
+              const users: unknown[] = result.rows;
+              client.release();
+              res.json(users);
+            })
+            .catch((err: unknown) => {
+              console.error(err);
+              res.status(500).json({ error: 'Internal server error' });
+            });
         })
         .catch((err: unknown) => {
           console.error(err);
