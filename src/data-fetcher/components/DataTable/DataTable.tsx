@@ -83,7 +83,7 @@ export default function DataTable({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: pageSizeOptions[0],
+        pageSize: searchQuery.visibleRows,
       },
     },
     globalFilterFn: exactMatchFilter,
