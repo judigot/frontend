@@ -145,10 +145,7 @@ export default function DataTable({
               value={searchQuery.query}
               onChange={(value) => {
                 setSearchQuery({
-                  ...searchQuery,
-                  ...{
-                    query: String(value),
-                  },
+                  query: String(value),
                 });
               }}
             />
@@ -296,10 +293,7 @@ export default function DataTable({
                 renderValue={(value) => value + 1}
                 onChange={(e) => {
                   setSearchQuery({
-                    ...searchQuery,
-                    ...{
-                      page: Number(e.target.value),
-                    },
+                    page: Number(e.target.value),
                   });
                   table.setPageIndex(Number(e.target.value));
                 }}
@@ -342,10 +336,7 @@ export default function DataTable({
                 const targetPage = 1;
                 table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  ...searchQuery,
-                  ...{
-                    page: targetPage,
-                  },
+                  page: targetPage,
                 });
               }}
               disabled={pageNumber === 1}
@@ -385,10 +376,7 @@ export default function DataTable({
                 const targetPage = totalPages;
                 table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  ...searchQuery,
-                  ...{
-                    page: targetPage,
-                  },
+                  page: targetPage,
                 });
               }}
               disabled={pageNumber === totalPages}

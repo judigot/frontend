@@ -9,15 +9,20 @@ export interface ITableInfo {
 
 interface IDataTableStore {
   searchQuery: ITableInfo;
-  setSearchQuery: (query: ITableInfo) => void;
+  setSearchQuery: (partialQuery: Partial<ITableInfo>) => void;
   data: unknown;
   getData: () => Promise<unknown>;
 }
 
 export const useDataTableStore = create<IDataTableStore>((set, get) => ({
   searchQuery: { query: '', page: 1, limit: 100 },
-  setSearchQuery: (query) => {
-    set({ searchQuery: query });
+  setSearchQuery: (partialQuery) => {
+    set((state) => ({
+      searchQuery: {
+        ...state.searchQuery,
+        ...partialQuery,
+      },
+    }));
   },
   data: undefined,
   getData: async () => {
