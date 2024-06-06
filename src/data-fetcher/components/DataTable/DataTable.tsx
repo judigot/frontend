@@ -72,6 +72,8 @@ export default function DataTable({
     return assignColumnNames(columnNames);
   })();
 
+  const numOfRowsOptions: number[] = [5, 10, 20];
+
   const table = useReactTable({
     data,
     columns: dynamicColumns as ColumnDef<(typeof data)[0]>[],
@@ -79,6 +81,12 @@ export default function DataTable({
     filterFns: {},
     state: {
       globalFilter: searchQuery.query,
+    },
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: numOfRowsOptions[0],
+      },
     },
     globalFilterFn: exactMatchFilter,
     onGlobalFilterChange: setSearchQuery,
@@ -91,7 +99,6 @@ export default function DataTable({
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
 
-  const numOfRowsOptions: number[] = [5, 10, 20];
   const pageNumber: number = table.getState().pagination.pageIndex + 1;
   const resultsLength = table.getPrePaginationRowModel().rows.length;
   const actualRowCount = totalRecords ?? resultsLength;
