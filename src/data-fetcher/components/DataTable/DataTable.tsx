@@ -116,7 +116,11 @@ export default function DataTable({
       : resultsLength === 0
         ? 'No records found.'
         : searchQuery.query === ''
-          ? `Displaying ${String(rowCountPerPage)} records out of ${String(actualRowCount.toLocaleString())}.`
+          ? `Displaying ${String(rowCountPerPage)} records out of ${String(
+              actualRowCount.toLocaleString(),
+            )
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
           : resultsLength === 0
             ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
             : `Displaying ${String(Math.min(rowCountPerPage, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
@@ -282,7 +286,13 @@ export default function DataTable({
             <span className="flex items-center gap-1">
               <span>Page </span>
               <strong>
-                {`${String(pageNumber)} of ${String(totalPages)}`}
+                {`${String(pageNumber)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} of ${String(
+                  totalPages,
+                )
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`}
               </strong>
             </span>
             <span> | </span>
