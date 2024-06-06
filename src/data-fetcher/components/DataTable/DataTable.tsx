@@ -99,11 +99,6 @@ export default function App({ totalRows = undefined, data }: IProps) {
 
   const actualRowCount = totalRows ?? resultsLength;
 
-  // const totalPages =
-  //   totalRows !== undefined
-  //     ? totalRows / table.getState().pagination.pageSize
-  //     : table.getPageCount();
-
   const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
     if (searchQuery.query !== '') {
