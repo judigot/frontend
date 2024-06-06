@@ -26,12 +26,6 @@ function App() {
     // staleTime: 1 * 1000, // Refresh if n seconds has passed on window focus
   });
 
-  useEffect(() => {
-    if (isError) {
-      console.log('There was an error!');
-    }
-  }, [isError]);
-
   if (isLoading) {
     return <DataTable isLoading={isLoading} data={[{}]} />;
   }
