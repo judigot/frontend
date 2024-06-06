@@ -296,7 +296,9 @@ export default function DataTable({
               </strong>
             </span>
             <span> | </span>
-            <span className="flex items-center gap-1">
+
+            {/* Page selector */}
+            {/* <span className="flex items-center gap-1">
               Page: &nbsp;
               <Select
                 value={pageNumber - 1}
@@ -314,7 +316,7 @@ export default function DataTable({
                   </MenuItem>
                 ))}
               </Select>
-            </span>
+            </span> */}
 
             <Select
               value={table.getState().pagination.pageSize}
@@ -372,6 +374,7 @@ export default function DataTable({
                 table.nextPage();
                 if (pageNumber * rowCountPerPage === resultsLength) {
                   // Fetch new data
+                  setSearchQuery({ page: pageNumber });
                 }
               }}
               disabled={!(pageNumber < totalPages)}
@@ -395,6 +398,7 @@ export default function DataTable({
             </IconButton>
           </div>
         </div>
+        {pageNumber}
       </div>
     </ThemeProvider>
   );
