@@ -1,5 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
-
+import React, { useRef, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,18 +6,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
 import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import LastPageIcon from '@mui/icons-material/LastPage';
-
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
 import { useDataTableStore } from './store';
-
 import {
   useReactTable,
   getCoreRowModel,
@@ -31,11 +26,8 @@ import {
   flexRender,
   ColumnDef,
 } from '@tanstack/react-table';
-
 import TextField from '@mui/material/TextField/TextField';
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-
 import { exactMatchFilter } from './Filter';
 import assignColumnNames from '@/data-fetcher/components/DataTable/Columns';
 import { titleCase } from '@/data-fetcher/components/DataTable/helpers/helpers';
@@ -47,16 +39,24 @@ const darkTheme = createTheme({
 });
 
 interface IProps {
-  totalRows?: number;
+  totalRecords?: number;
   data: unknown[];
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
-export default function App({ totalRows = undefined, data }: IProps) {
+export default function DataTable({
+  totalRecords = undefined,
+  data,
+  isLoading = false,
+  isError = false,
+}: IProps) {
   const { searchQuery, setSearchQuery } = useDataTableStore();
 
   const isTitleCaseColumnNames = true;
 
   const dynamicColumns = (<T extends Record<string, unknown>>() => {
+    if (data.length === 0) return [];
     const keys: string[] = Object.keys(data[0] as T);
     const columnNames: { [key in keyof T]: string } = {} as {
       [key in keyof T]: string;
@@ -76,7 +76,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
     data,
     columns: dynamicColumns as ColumnDef<(typeof data)[0]>[],
     enableColumnFilters: false,
-    filterFns: {}, // For column filtering
+    filterFns: {},
     state: {
       globalFilter: searchQuery.query,
     },
@@ -92,27 +92,34 @@ export default function App({ totalRows = undefined, data }: IProps) {
   });
 
   const numOfRowsOptions: number[] = [5, 10, 20];
-
   const pageNumber: number = table.getState().pagination.pageIndex + 1;
-
   const resultsLength = table.getPrePaginationRowModel().rows.length;
-
-  const actualRowCount = totalRows ?? resultsLength;
-
+  const actualRowCount = totalRecords ?? resultsLength;
   const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
     if (searchQuery.query !== '') {
       return Math.ceil(data.length / pageSize);
     }
 
-    if (totalRows !== undefined) {
-      return Math.ceil(totalRows / pageSize);
+    if (totalRecords !== undefined) {
+      return Math.ceil(totalRecords / pageSize);
     }
 
     return table.getPageCount();
   })();
-
   const visibleRowsCount = table.getRowModel().rows.length;
+
+  const displayMessage = isLoading
+    ? 'Loading...'
+    : isError
+      ? 'Error loading data.'
+      : resultsLength === 0
+        ? 'No records found.'
+        : searchQuery.query === ''
+          ? `Displaying ${String(pageSize)} records out of ${String(actualRowCount.toLocaleString())}.`
+          : resultsLength === 0
+            ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
+            : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -212,22 +219,51 @@ export default function App({ totalRows = undefined, data }: IProps) {
                 ))}
               </TableHead>
               <TableBody>
-                {table.getRowModel().rows.map((row) => {
-                  return (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : isError ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      Error loading data
+                    </TableCell>
+                  </TableRow>
+                ) : resultsLength > 0 ? (
+                  table.getRowModel().rows.map((row) => {
+                    return (
+                      <TableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => {
+                          return (
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      No records found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -243,13 +279,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
           <div
             style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
           >
-            {/* <pre>{JSON.stringify(table.getState(), null, 2)}</pre> */}
-            <span>
-              {resultsLength && <>Showing {visibleRowsCount} of&nbsp;</>}
-              {actualRowCount}&nbsp;
-              {resultsLength > 1 ? 'rows' : 'row'}
-            </span>
-
+            <span>{displayMessage}</span>
             {resultsLength > numOfRowsOptions[0] && (
               <>
                 <span> | </span>
@@ -374,53 +404,53 @@ export default function App({ totalRows = undefined, data }: IProps) {
   );
 }
 
-interface IDebouncedInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  debounce?: number;
-}
-
 function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 250,
-}: IDebouncedInputProps) {
+  debounce = 500,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  debounce?: number;
+}) {
   const [value, setValue] = useState(initialValue);
-  const debounceTimeout = useRef<number | undefined>(undefined);
-
-  const debouncedChangeHandler = useCallback(
-    (newValue: string) => {
-      if (debounceTimeout.current !== undefined) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = window.setTimeout(() => {
-        onChange(newValue);
-      }, debounce);
-    },
-    [onChange, debounce],
-  );
+  const debounceTimeout = useRef<number | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setValue(newValue);
-    debouncedChangeHandler(newValue);
+    if (debounceTimeout.current != null) {
+      clearTimeout(debounceTimeout.current);
+    }
+    debounceTimeout.current = window.setTimeout(() => {
+      onChange(newValue);
+    }, debounce);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (debounceTimeout.current != null) {
+        clearTimeout(debounceTimeout.current);
+      }
+      onChange(value);
+    }
   };
 
   return (
     <TextField
+      id="searchInput"
+      label="Search"
+      variant="outlined"
+      value={value}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
       inputProps={{
         autoFocus: true,
         style: {
           backgroundColor: 'black',
           textAlign: 'center',
         },
-        debounce,
       }}
-      id="searchInput"
-      label={'Search'}
-      value={value}
-      onChange={handleChange}
-      variant="outlined"
     />
   );
 }
