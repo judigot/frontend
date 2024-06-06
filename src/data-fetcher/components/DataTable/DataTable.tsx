@@ -83,7 +83,7 @@ export default function DataTable({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: searchQuery.visibleRows,
+        pageSize: searchQuery.limit,
       },
     },
     globalFilterFn: exactMatchFilter,
@@ -100,14 +100,14 @@ export default function DataTable({
   const pageNumber: number = table.getState().pagination.pageIndex + 1;
   const resultsLength = table.getPrePaginationRowModel().rows.length;
   const actualRowCount = totalRecords ?? resultsLength;
-  const rowCountPerPage = table.getState().pagination.pageSize;
+  const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
     if (searchQuery.query !== '') {
-      return Math.ceil(data.length / rowCountPerPage);
+      return Math.ceil(data.length / pageSize);
     }
 
     if (totalRecords !== undefined) {
-      return Math.ceil(totalRecords / rowCountPerPage);
+      return Math.ceil(totalRecords / pageSize);
     }
 
     return table.getPageCount();
@@ -121,14 +121,14 @@ export default function DataTable({
       : resultsLength === 0
         ? 'No records found.'
         : searchQuery.query === ''
-          ? `Displaying ${String(rowCountPerPage)} records out of ${String(
+          ? `Displaying ${String(pageSize)} records out of ${String(
               actualRowCount.toLocaleString(),
             )
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
           : resultsLength === 0
             ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
-            : `Displaying ${String(Math.min(rowCountPerPage, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
+            : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -380,7 +380,7 @@ export default function DataTable({
               className="border rounded p-1"
               onClick={() => {
                 table.nextPage();
-                if (pageNumber * rowCountPerPage === resultsLength) {
+                if (pageNumber * pageSize === resultsLength) {
                   // Fetch new data
                   setSearchQuery({ page: pageNumber });
                 }

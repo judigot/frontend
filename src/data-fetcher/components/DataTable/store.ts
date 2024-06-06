@@ -5,7 +5,7 @@ export interface ITableInfo {
   query: string;
   page: number;
   limit: number;
-  visibleRows: number;
+  // visibleRows: number;
 }
 
 interface IDataTableStore {
@@ -22,8 +22,8 @@ export const useDataTableStore = create<IDataTableStore>((set, get) => ({
   searchQuery: {
     query: '',
     page: 1,
-    limit: 100,
-    visibleRows: pageSizeOptions[0],
+    limit: pageSizeOptions[0],
+    // visibleRows: pageSizeOptions[0],
   },
   setSearchQuery: (partialQuery) => {
     set((state) => ({
