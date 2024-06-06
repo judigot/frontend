@@ -16,7 +16,7 @@ interface IDataTableStore {
   getData: () => Promise<unknown>;
 }
 
-const pageSizeOptions: number[] = [5, 10, 20, 69];
+const pageSizeOptions: number[] = [5, 10, 20];
 export const useDataTableStore = create<IDataTableStore>((set, get) => ({
   pageSizeOptions,
   searchQuery: {
