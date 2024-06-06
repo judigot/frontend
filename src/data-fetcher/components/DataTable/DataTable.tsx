@@ -166,6 +166,7 @@ export default function DataTable({
               onChange={(value) => {
                 setSearchQuery({
                   query: String(value),
+                  page: 1, // Reset to first page on search
                 });
               }}
             />
