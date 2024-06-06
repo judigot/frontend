@@ -97,43 +97,51 @@ export default function DataTable({
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
 
-  const pageNumber: number = table.getState().pagination.pageIndex + 1;
+  const pageNumber: number = searchQuery.page;
   const resultsLength = table.getPrePaginationRowModel().rows.length;
-  const actualRowCount = totalRecords ?? resultsLength;
+  const actualRowCount = totalRecords ?? (isLoading ? '' : resultsLength);
   const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
-    if (searchQuery.query !== '') {
-      return Math.ceil(data.length / pageSize);
-    }
+    if (!isLoading) {
+      if (searchQuery.query !== '') {
+        return Math.ceil(data.length / pageSize);
+      }
 
-    if (totalRecords !== undefined) {
-      return Math.ceil(totalRecords / pageSize);
+      if (totalRecords !== undefined) {
+        return Math.ceil(totalRecords / pageSize);
+      }
+      return table.getPageCount();
     }
-
-    return table.getPageCount();
   })();
   const visibleRowsCount = table.getRowModel().rows.length;
 
-  const displayMessage = isLoading
-    ? 'Loading...'
-    : isError
-      ? 'Error loading data.'
-      : resultsLength === 0
-        ? 'No records found.'
-        : searchQuery.query === ''
-          ? `Displaying ${String(pageSize)} records out of ${String(
-              actualRowCount.toLocaleString(),
-            )
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-          : resultsLength === 0
-            ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
-            : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
+  const displayMessage = isError
+    ? 'Error loading data.'
+    : resultsLength === 0
+      ? 'No records found.'
+      : searchQuery.query === ''
+        ? `Displaying ${String(pageSize)} records out of ${String(
+            actualRowCount.toLocaleString(),
+          )
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+        : resultsLength === 0
+          ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
+          : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
 
   return (
     <ThemeProvider theme={darkTheme}>
       <h1 style={{ textAlign: 'center' }}>
         {JSON.stringify(searchQuery, null, 4)}
+      </h1>
+      <h1 style={{ textAlign: 'center' }}>
+        {JSON.stringify(
+          {
+            totalPages,
+          },
+          null,
+          4,
+        )}
       </h1>
       <div
         style={{
@@ -289,7 +297,6 @@ export default function DataTable({
             style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
           >
             <span>{displayMessage}</span>
-
             <span> | </span>
             <span className="flex items-center gap-1">
               <span>Page </span>
@@ -304,7 +311,6 @@ export default function DataTable({
               </strong>
             </span>
             <span> | </span>
-
             {/* Page selector */}
             {/* <span className="flex items-center gap-1">
               Page: &nbsp;
@@ -325,11 +331,12 @@ export default function DataTable({
                 ))}
               </Select>
             </span> */}
-
             <Select
-              value={table.getState().pagination.pageSize}
+              value={searchQuery.limit}
               onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
+                const newPageSize = Number(e.target.value);
+                setSearchQuery({ limit: newPageSize });
+                table.setPageSize(newPageSize);
               }}
             >
               {pageSizeOptions.map((pageSize) => (
@@ -338,6 +345,8 @@ export default function DataTable({
                 </MenuItem>
               ))}
             </Select>
+            {/* <span> | </span> */}
+            &nbsp;
           </div>
 
           <div
@@ -368,9 +377,11 @@ export default function DataTable({
               aria-label="previous page"
               className="border rounded p-1"
               onClick={() => {
-                table.previousPage();
+                setSearchQuery({
+                  page: searchQuery.page - 1,
+                });
               }}
-              disabled={!(pageNumber > 1)}
+              disabled={pageNumber === 1}
             >
               <NavigateBeforeIcon />
             </IconButton>
@@ -379,13 +390,11 @@ export default function DataTable({
               aria-label="next page"
               className="border rounded p-1"
               onClick={() => {
-                table.nextPage();
-                if (pageNumber * pageSize === resultsLength) {
-                  // Fetch new data
-                  setSearchQuery({ page: pageNumber });
-                }
+                setSearchQuery({
+                  page: searchQuery.page + 1,
+                });
               }}
-              disabled={!(pageNumber < totalPages)}
+              disabled={pageNumber === totalPages}
             >
               <NavigateNextIcon />
             </IconButton>
@@ -394,10 +403,8 @@ export default function DataTable({
               aria-label="last page"
               className="border rounded p-1"
               onClick={() => {
-                const targetPage = totalPages;
-                table.setPageIndex(targetPage - 1);
                 setSearchQuery({
-                  page: targetPage,
+                  page: totalPages,
                 });
               }}
               disabled={pageNumber === totalPages}
