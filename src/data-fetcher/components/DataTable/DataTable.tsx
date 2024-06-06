@@ -398,7 +398,6 @@ export default function DataTable({
             </IconButton>
           </div>
         </div>
-        {pageNumber}
       </div>
     </ThemeProvider>
   );
