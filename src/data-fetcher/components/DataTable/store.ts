@@ -5,17 +5,26 @@ export interface ITableInfo {
   query: string;
   page: number;
   limit: number;
+  visibleRows: number;
 }
 
 interface IDataTableStore {
+  pageSizeOptions: number[];
   searchQuery: ITableInfo;
   setSearchQuery: (partialQuery: Partial<ITableInfo>) => void;
   data: unknown;
   getData: () => Promise<unknown>;
 }
 
+const pageSizeOptions: number[] = [5, 10, 20, 69];
 export const useDataTableStore = create<IDataTableStore>((set, get) => ({
-  searchQuery: { query: '', page: 1, limit: 100 },
+  pageSizeOptions,
+  searchQuery: {
+    query: '',
+    page: 1,
+    limit: 100,
+    visibleRows: pageSizeOptions[0],
+  },
   setSearchQuery: (partialQuery) => {
     set((state) => ({
       searchQuery: {

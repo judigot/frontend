@@ -51,7 +51,7 @@ export default function DataTable({
   isLoading = false,
   isError = false,
 }: IProps) {
-  const { searchQuery, setSearchQuery } = useDataTableStore();
+  const { pageSizeOptions, searchQuery, setSearchQuery } = useDataTableStore();
 
   const isTitleCaseColumnNames = true;
 
@@ -72,8 +72,6 @@ export default function DataTable({
     return assignColumnNames(columnNames);
   })();
 
-  const numOfRowsOptions: number[] = [5, 10, 20];
-
   const table = useReactTable({
     data,
     columns: dynamicColumns as ColumnDef<(typeof data)[0]>[],
@@ -85,7 +83,7 @@ export default function DataTable({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: numOfRowsOptions[0],
+        pageSize: pageSizeOptions[0],
       },
     },
     globalFilterFn: exactMatchFilter,
@@ -334,7 +332,7 @@ export default function DataTable({
                 table.setPageSize(Number(e.target.value));
               }}
             >
-              {numOfRowsOptions.map((pageSize) => (
+              {pageSizeOptions.map((pageSize) => (
                 <MenuItem key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </MenuItem>
