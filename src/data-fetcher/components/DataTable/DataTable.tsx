@@ -127,6 +127,9 @@ export default function DataTable({
 
   return (
     <ThemeProvider theme={darkTheme}>
+      <h1 style={{ textAlign: 'center' }}>
+        {JSON.stringify(searchQuery, null, 4)}
+      </h1>
       <div
         style={{
           display: 'grid',
