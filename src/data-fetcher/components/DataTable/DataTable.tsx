@@ -91,9 +91,9 @@ export default function App({ totalRows = undefined, data }: IProps) {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
 
-  const numOfRows: number[] = [5, 10, 20];
+  const numOfRowsOptions: number[] = [5, 10, 20];
 
-  const currentPage: number = table.getState().pagination.pageIndex + 1;
+  const pageNumber: number = table.getState().pagination.pageIndex + 1;
 
   const resultsLength = table.getPrePaginationRowModel().rows.length;
 
@@ -250,13 +250,13 @@ export default function App({ totalRows = undefined, data }: IProps) {
               {resultsLength > 1 ? 'rows' : 'row'}
             </span>
 
-            {resultsLength > numOfRows[0] && (
+            {resultsLength > numOfRowsOptions[0] && (
               <>
                 <span> | </span>
                 <span className="flex items-center gap-1">
                   <span>Page </span>
                   <strong>
-                    {`${String(currentPage)} of ${String(totalPages)}`}
+                    {`${String(pageNumber)} of ${String(totalPages)}`}
                   </strong>
                 </span>
                 <span> | </span>
@@ -289,7 +289,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
                     table.setPageSize(Number(e.target.value));
                   }}
                 >
-                  {numOfRows.map((pageSize) => (
+                  {numOfRowsOptions.map((pageSize) => (
                     <MenuItem key={pageSize} value={pageSize}>
                       Show {pageSize}
                     </MenuItem>
@@ -299,7 +299,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
             )}
           </div>
 
-          {resultsLength > numOfRows[0] && (
+          {resultsLength > numOfRowsOptions[0] && (
             <div
               style={{
                 padding: 20,
@@ -322,7 +322,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
                     },
                   });
                 }}
-                disabled={currentPage === 1}
+                disabled={pageNumber === 1}
               >
                 <FirstPageIcon />
               </IconButton>
@@ -333,7 +333,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
                 onClick={() => {
                   table.previousPage();
                 }}
-                disabled={!(currentPage > 1)}
+                disabled={!(pageNumber > 1)}
               >
                 <NavigateBeforeIcon />
               </IconButton>
@@ -344,7 +344,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
                 onClick={() => {
                   table.nextPage();
                 }}
-                disabled={!(currentPage < totalPages)}
+                disabled={!(pageNumber < totalPages)}
               >
                 <NavigateNextIcon />
               </IconButton>
@@ -362,7 +362,7 @@ export default function App({ totalRows = undefined, data }: IProps) {
                     },
                   });
                 }}
-                disabled={currentPage === totalPages}
+                disabled={pageNumber === totalPages}
               >
                 <LastPageIcon />
               </IconButton>
