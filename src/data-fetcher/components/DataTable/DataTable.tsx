@@ -291,7 +291,7 @@ export default function DataTable({
                 </span>
                 <span> | </span>
                 <span className="flex items-center gap-1">
-                  Go to page: &nbsp;
+                  Page: &nbsp;
                   <Select
                     value={table.getState().pagination.pageIndex}
                     renderValue={(value) => value + 1}
