@@ -59,7 +59,7 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
     'gender',
   ];
 
-  const { page = '1', limit = '10', search = '' } = req.query;
+  const { page = '1', limit = '100', search = '' } = req.query;
 
   const offset = (Number(page) - 1) * Number(limit);
 
