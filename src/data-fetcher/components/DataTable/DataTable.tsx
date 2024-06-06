@@ -280,124 +280,119 @@ export default function DataTable({
             style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
           >
             <span>{displayMessage}</span>
-            {resultsLength > numOfRowsOptions[0] && (
-              <>
-                <span> | </span>
-                <span className="flex items-center gap-1">
-                  <span>Page </span>
-                  <strong>
-                    {`${String(pageNumber)} of ${String(totalPages)}`}
-                  </strong>
-                </span>
-                <span> | </span>
-                <span className="flex items-center gap-1">
-                  Page: &nbsp;
-                  <Select
-                    value={table.getState().pagination.pageIndex}
-                    renderValue={(value) => value + 1}
-                    onChange={(e) => {
-                      setSearchQuery({
-                        ...searchQuery,
-                        ...{
-                          page: Number(e.target.value),
-                        },
-                      });
-                      table.setPageIndex(Number(e.target.value));
-                    }}
-                  >
-                    {Array.from({ length: totalPages }, (_, i) => (
-                      <MenuItem key={i} value={i}>
-                        Page {i + 1}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </span>
 
-                <Select
-                  value={table.getState().pagination.pageSize}
-                  onChange={(e) => {
-                    table.setPageSize(Number(e.target.value));
-                  }}
-                >
-                  {numOfRowsOptions.map((pageSize) => (
-                    <MenuItem key={pageSize} value={pageSize}>
-                      Show {pageSize}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </>
-            )}
-          </div>
+            <span> | </span>
+            <span className="flex items-center gap-1">
+              <span>Page </span>
+              <strong>
+                {`${String(pageNumber)} of ${String(totalPages)}`}
+              </strong>
+            </span>
+            <span> | </span>
+            <span className="flex items-center gap-1">
+              Page: &nbsp;
+              <Select
+                value={pageNumber - 1}
+                renderValue={(value) => value + 1}
+                onChange={(e) => {
+                  setSearchQuery({
+                    ...searchQuery,
+                    ...{
+                      page: Number(e.target.value),
+                    },
+                  });
+                  table.setPageIndex(Number(e.target.value));
+                }}
+              >
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <MenuItem key={i} value={i}>
+                    Page {i + 1}
+                  </MenuItem>
+                ))}
+              </Select>
+            </span>
 
-          {resultsLength > numOfRowsOptions[0] && (
-            <div
-              style={{
-                padding: 20,
-                textAlign: 'right',
-                position: 'relative',
-                float: 'right',
+            <Select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
               }}
             >
-              <IconButton
-                size="large"
-                aria-label="first page"
-                className="border rounded p-1"
-                onClick={() => {
-                  const targetPage = 1;
-                  table.setPageIndex(targetPage - 1);
-                  setSearchQuery({
-                    ...searchQuery,
-                    ...{
-                      page: targetPage,
-                    },
-                  });
-                }}
-                disabled={pageNumber === 1}
-              >
-                <FirstPageIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="previous page"
-                className="border rounded p-1"
-                onClick={() => {
-                  table.previousPage();
-                }}
-                disabled={!(pageNumber > 1)}
-              >
-                <NavigateBeforeIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="next page"
-                className="border rounded p-1"
-                onClick={() => {
-                  table.nextPage();
-                }}
-                disabled={!(pageNumber < totalPages)}
-              >
-                <NavigateNextIcon />
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="last page"
-                className="border rounded p-1"
-                onClick={() => {
-                  const targetPage = totalPages;
-                  table.setPageIndex(targetPage - 1);
-                  setSearchQuery({
-                    ...searchQuery,
-                    ...{
-                      page: targetPage,
-                    },
-                  });
-                }}
-                disabled={pageNumber === totalPages}
-              >
-                <LastPageIcon />
-              </IconButton>
-            </div>
-          )}
+              {numOfRowsOptions.map((pageSize) => (
+                <MenuItem key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+
+          <div
+            style={{
+              padding: 20,
+              textAlign: 'right',
+              position: 'relative',
+              float: 'right',
+            }}
+          >
+            <IconButton
+              size="large"
+              aria-label="first page"
+              className="border rounded p-1"
+              onClick={() => {
+                const targetPage = 1;
+                table.setPageIndex(targetPage - 1);
+                setSearchQuery({
+                  ...searchQuery,
+                  ...{
+                    page: targetPage,
+                  },
+                });
+              }}
+              disabled={pageNumber === 1}
+            >
+              <FirstPageIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="previous page"
+              className="border rounded p-1"
+              onClick={() => {
+                table.previousPage();
+              }}
+              disabled={!(pageNumber > 1)}
+            >
+              <NavigateBeforeIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="next page"
+              className="border rounded p-1"
+              onClick={() => {
+                table.nextPage();
+              }}
+              disabled={!(pageNumber < totalPages)}
+            >
+              <NavigateNextIcon />
+            </IconButton>
+            <IconButton
+              size="large"
+              aria-label="last page"
+              className="border rounded p-1"
+              onClick={() => {
+                const targetPage = totalPages;
+                table.setPageIndex(targetPage - 1);
+                setSearchQuery({
+                  ...searchQuery,
+                  ...{
+                    page: targetPage,
+                  },
+                });
+              }}
+              disabled={pageNumber === totalPages}
+            >
+              <LastPageIcon />
+            </IconButton>
+          </div>
         </div>
       </div>
     </ThemeProvider>
