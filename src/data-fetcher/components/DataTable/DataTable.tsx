@@ -294,7 +294,7 @@ export default function DataTable({
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`}
                 </strong>
               </span>
-              <span> | </span>
+              &nbsp;
               {/* Page selector */}
               {/* <span className="flex items-center gap-1"> Page: &nbsp; <Select value={pageNumber - 1} renderValue={(value) => value + 1} onChange={(e) => { setSearchQuery({ page: Number(e.target.value), }); table.setPageIndex(Number(e.target.value)); }} > {Array.from({ length: totalPages }, (_, i) => ( <MenuItem key={i} value={i}> Page {i + 1} </MenuItem> ))} </Select> </span> */}
               <Select
