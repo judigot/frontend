@@ -62,6 +62,8 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
 
     const { page = '1', limit = '100', search = '' } = req.query;
 
+    /* prettier-ignore */ ((log = req.query)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
+
     const searchCondition =
       search !== ''
         ? `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
@@ -124,6 +126,8 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
         console.log('Query:', finalQuery);
 
         const result = await client.query(queryString, searchParams);
+
+        /* prettier-ignore */ ((log = result.rows)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
 
         res.json(result.rows);
       } catch (queryErr) {
