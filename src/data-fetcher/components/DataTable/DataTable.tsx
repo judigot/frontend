@@ -100,37 +100,28 @@ export default function DataTable({
   const pageNumber: number = searchQuery.page;
   const pageSize = table.getState().pagination.pageSize;
   const visibleRowsCount = table.getPrePaginationRowModel().rows.length;
-  const totalRecordsCount = totalRecords ?? (isLoading ? '' : visibleRowsCount);
-  const totalPages = (() => {
-    if (searchQuery.query !== '') {
-      return Math.ceil(data.length / pageSize);
-    }
+  const totalRecordsCount = totalRecords ?? (isLoading ? 0 : visibleRowsCount);
 
-    if (totalRecords !== undefined) {
-      return Math.ceil(totalRecords / pageSize);
-    }
-    return table.getPageCount();
-  })();
+  const totalPages = Math.ceil(totalRecordsCount / pageSize);
 
   const isTotalRecordsZero = totalRecordsCount === 0;
   const isSearchQueryEmpty = searchQuery.query === '';
 
-  let displayMessage = '';
-  if (isError) {
-    displayMessage = 'Error loading data.';
-  } else {
+  const displayMessage = (() => {
+    if (isError) {
+      return 'Error loading data.';
+    }
+
     if (isTotalRecordsZero && isSearchQueryEmpty) {
-      displayMessage = 'No records found.';
+      return 'No records found.';
     }
+
     if (!isTotalRecordsZero && isSearchQueryEmpty) {
-      displayMessage = `Displaying ${String(pageSize)} records out of ${String(
-        totalRecordsCount.toLocaleString(),
-      ).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+      return `Displaying ${String(pageSize)} records out of ${totalRecordsCount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
     }
-    if (!isSearchQueryEmpty && !isTotalRecordsZero) {
-      displayMessage = `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${totalRecordsCount.toLocaleString()} records for "${searchQuery.query}".`;
-    }
-  }
+
+    return `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${totalRecordsCount.toLocaleString()} records for "${searchQuery.query}".`;
+  })();
 
   return (
     <ThemeProvider theme={darkTheme}>
