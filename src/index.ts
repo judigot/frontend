@@ -51,101 +51,92 @@ app.get('/api/users', (_req: Request, res: Response) =>
 
 import PostgreSQL from 'pg-pool';
 app.get('/api/v1/users', (req: Request, res: Response) => {
-  const selectedColumns: string[] = [
-    'id',
-    'first_name',
-    'last_name',
-    'email',
-    'gender',
-  ];
+  void (async () => {
+    const selectedColumns: string[] = [
+      'id',
+      'first_name',
+      'last_name',
+      'email',
+      'gender',
+    ];
 
-  const { page = '1', limit = '100', search = '' } = req.query;
+    const { page = '1', limit = '100', search = '' } = req.query;
 
-  const searchCondition =
-    search !== ''
-      ? `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
-      : '';
+    const searchCondition =
+      search !== ''
+        ? `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
+        : '';
 
-  const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
-  pool
-    .connect()
-    .then((client) => {
-      const countQuery = `
-        SELECT COUNT(*) AS total_rows 
-        FROM users 
-        ${searchCondition}
-      `;
+    const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
 
-      interface ICountResult {
-        total_rows: number;
+    try {
+      const client = await pool.connect();
+
+      try {
+        const countQuery = `
+          SELECT COUNT(*) AS total_rows 
+          FROM users 
+          ${searchCondition}
+        `;
+
+        const countResult = await client.query<{ total_rows: number }>(
+          countQuery,
+          search !== '' ? [search] : [],
+        );
+
+        const totalRows = countResult.rows[0].total_rows;
+        const totalPages = Math.ceil(totalRows / Number(limit));
+        const validPage = Math.min(Number(page), totalPages);
+        const validOffset = Math.max((validPage - 1) * Number(limit), 0);
+
+        const queryString = `
+          SELECT (
+            SELECT COUNT(*)
+            FROM users
+          ) AS total_rows,
+          (
+            SELECT json_agg(rows)
+            FROM (
+              SELECT ${selectedColumns.join(', ')} 
+              FROM "users" 
+              ${searchCondition} 
+              ORDER BY id 
+              ${search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`}
+            ) as rows
+          ) AS rows;
+        `;
+
+        const searchParams =
+          search !== ''
+            ? [search, validOffset, Number(limit)]
+            : [validOffset, Number(limit)];
+
+        const finalQuery =
+          search !== ''
+            ? queryString
+                .replace('$1', `'${String(searchParams[0])}'`)
+                .replace('$2', String(searchParams[1]))
+                .replace('$3', String(searchParams[2]))
+            : queryString
+                .replace('$1', String(searchParams[0]))
+                .replace('$2', String(searchParams[1]));
+
+        console.log('Query:', finalQuery);
+
+        const result = await client.query(queryString, searchParams);
+
+        res.json(result.rows);
+      } catch (queryErr) {
+        console.error(queryErr);
+        res.status(500).json({ error: 'Internal server error' });
+      } finally {
+        client.release();
       }
-
-      client
-        .query<ICountResult>(countQuery, search !== '' ? [search] : [])
-        .then((countResult) => {
-          const totalRows = countResult.rows[0].total_rows;
-          const totalPages = Math.ceil(totalRows / Number(limit));
-
-          /* Adjust the page if it exceeds total pages */
-          const validPage = Math.min(Number(page), totalPages);
-          const validOffset = Math.max((validPage - 1) * Number(limit), 0);
-
-          const queryString = `
-            SELECT (
-              SELECT COUNT(*)
-              FROM users
-            ) AS total_rows,
-            (
-              SELECT json_agg(rows)
-              FROM (
-                SELECT ${selectedColumns.join(', ')} 
-                FROM "users" 
-                ${searchCondition} 
-                ORDER BY id 
-                ${search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`}
-              ) as rows
-            ) AS rows;
-          `;
-
-          const searchParams =
-            search !== ''
-              ? [search, validOffset, Number(limit)]
-              : [validOffset, Number(limit)];
-
-          /* Construct the final query string manually for logging */
-          const finalQuery =
-            search !== ''
-              ? queryString
-                  .replace('$1', `'${String(searchParams[0])}'`)
-                  .replace('$2', String(searchParams[1]))
-                  .replace('$3', String(searchParams[2]))
-              : queryString
-                  .replace('$1', String(searchParams[0]))
-                  .replace('$2', String(searchParams[1]));
-
-          console.log('Query:', finalQuery);
-
-          return client
-            .query(queryString, searchParams)
-            .then((result) => {
-              const users: unknown[] = result.rows;
-              client.release();
-              res.json(users);
-            })
-            .catch((err: unknown) => {
-              console.error(err);
-              res.status(500).json({ error: 'Internal server error' });
-            });
-        })
-        .catch((err: unknown) => {
-          console.error(err);
-          res.status(500).json({ error: 'Internal server error' });
-        });
-    })
-    .catch((err: unknown) => {
-      console.error(err);
+    } catch (connectionErr) {
+      console.error(connectionErr);
       res.status(500).json({ error: 'Internal server error' });
-    });
+    }
+  })();
 });
 
 // Start server
