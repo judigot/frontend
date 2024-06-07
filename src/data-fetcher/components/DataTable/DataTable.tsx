@@ -98,9 +98,9 @@ export default function DataTable({
   });
 
   const pageNumber: number = searchQuery.page;
-  const resultsLength = table.getPrePaginationRowModel().rows.length;
-  const actualRowCount = totalRecords ?? (isLoading ? '' : resultsLength);
   const pageSize = table.getState().pagination.pageSize;
+  const visibleRowsCount = table.getPrePaginationRowModel().rows.length;
+  const totalRecordsCount = totalRecords ?? (isLoading ? '' : visibleRowsCount);
   const totalPages = (() => {
     if (searchQuery.query !== '') {
       return Math.ceil(data.length / pageSize);
@@ -111,21 +111,20 @@ export default function DataTable({
     }
     return table.getPageCount();
   })();
-  const visibleRowsCount = table.getRowModel().rows.length;
 
   const displayMessage = isError
     ? 'Error loading data.'
-    : resultsLength === 0
+    : totalRecordsCount === 0
       ? 'No records found.'
       : searchQuery.query === ''
         ? `Displaying ${String(pageSize)} records out of ${String(
-            actualRowCount.toLocaleString(),
+            totalRecordsCount.toLocaleString(),
           )
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-        : resultsLength === 0
-          ? `No records found for "${searchQuery.query}". Displaying 0 of ${actualRowCount.toLocaleString()} records.`
-          : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${resultsLength.toLocaleString()} records for "${searchQuery.query}".`;
+        : totalRecordsCount === 0
+          ? `No records found for "${searchQuery.query}". Displaying 0 of ${totalRecordsCount.toLocaleString()} records.`
+          : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${totalRecordsCount.toLocaleString()} records for "${searchQuery.query}".`;
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -238,7 +237,7 @@ export default function DataTable({
                       Error loading data
                     </TableCell>
                   </TableRow>
-                ) : resultsLength > 0 ? (
+                ) : visibleRowsCount > 0 ? (
                   table.getRowModel().rows.map((row) => {
                     return (
                       <TableRow key={row.id}>
