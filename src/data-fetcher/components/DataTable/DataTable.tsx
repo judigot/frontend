@@ -313,30 +313,14 @@ export default function DataTable({
             </span>
             <span> | </span>
             {/* Page selector */}
-            {/* <span className="flex items-center gap-1">
-              Page: &nbsp;
-              <Select
-                value={pageNumber - 1}
-                renderValue={(value) => value + 1}
-                onChange={(e) => {
-                  setSearchQuery({
-                    page: Number(e.target.value),
-                  });
-                  table.setPageIndex(Number(e.target.value));
-                }}
-              >
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <MenuItem key={i} value={i}>
-                    Page {i + 1}
-                  </MenuItem>
-                ))}
-              </Select>
-            </span> */}
+            {/* <span className="flex items-center gap-1"> Page: &nbsp; <Select value={pageNumber - 1} renderValue={(value) => value + 1} onChange={(e) => { setSearchQuery({ page: Number(e.target.value), }); table.setPageIndex(Number(e.target.value)); }} > {Array.from({ length: totalPages }, (_, i) => ( <MenuItem key={i} value={i}> Page {i + 1} </MenuItem> ))} </Select> </span> */}
             <Select
               value={searchQuery.limit}
               onChange={(e) => {
                 const newPageSize = Number(e.target.value);
-                const newTotalPages = Math.ceil((totalRecords ?? 0) / newPageSize);
+                const newTotalPages = Math.ceil(
+                  (totalRecords ?? 0) / newPageSize,
+                );
                 const newPage = Math.min(searchQuery.page, newTotalPages);
                 setSearchQuery({ limit: newPageSize, page: newPage });
                 table.setPageSize(newPageSize);
