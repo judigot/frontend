@@ -141,244 +141,246 @@ export default function DataTable({
           4,
         )}
       </h1>
-      <div>
-        <div
-          style={{
-            backgroundColor: 'black',
-            height: '100px',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-          }}
-        >
-          <DebouncedInput
-            value={searchQuery.query}
-            onChange={(value) => {
-              setSearchQuery({
-                page: 1, // Reset to first page on search
-                query: String(value),
-              });
-            }}
-          />
-        </div>
-
-        <TableContainer style={{ height: 400 }} component={Paper}>
-          <Table stickyHeader>
-            <TableHead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableCell key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <>
-                            <div
-                              role="button"
-                              onKeyDown={() => {
-                                return false;
-                              }}
-                              tabIndex={0}
-                              aria-label="Close modal"
-                              style={{
-                                cursor: 'pointer',
-                                width: 'max-content',
-                              }}
-                              className={
-                                header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-
-                              {header.column.getIsSorted() !== false ? (
-                                <i>
-                                  {
-                                    {
-                                      asc: ' (Ascending)',
-                                      desc: ' (Descending)',
-                                    }[header.column.getIsSorted() as string]
-                                  }
-                                </i>
-                              ) : null}
-                            </div>
-                            {header.column.getCanFilter() ? <div></div> : null}
-                          </>
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHead>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={dynamicColumns.length}
-                    style={{ textAlign: 'center' }}
-                  >
-                    Loading...
-                  </TableCell>
-                </TableRow>
-              ) : isError ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={dynamicColumns.length}
-                    style={{ textAlign: 'center' }}
-                  >
-                    Error loading data
-                  </TableCell>
-                </TableRow>
-              ) : resultsLength > 0 ? (
-                table.getRowModel().rows.map((row) => {
-                  return (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={dynamicColumns.length}
-                    style={{ textAlign: 'center' }}
-                  >
-                    No records found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            backgroundColor: 'black',
-            height: '100px',
-            width: '100%',
-          }}
-        >
+      <div style={{ backgroundColor: 'black', borderRadius: '5px' }}>
+        <div>
           <div
-            style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
+            style={{
+              height: '100px',
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+            }}
           >
-            <span>{displayMessage}</span>
-            <span> | </span>
-            <span className="flex items-center gap-1">
-              <span>Page </span>
-              <strong>
-                {`${String(pageNumber)
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} of ${String(
-                  totalPages,
-                )
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`}
-              </strong>
-            </span>
-            <span> | </span>
-            {/* Page selector */}
-            {/* <span className="flex items-center gap-1"> Page: &nbsp; <Select value={pageNumber - 1} renderValue={(value) => value + 1} onChange={(e) => { setSearchQuery({ page: Number(e.target.value), }); table.setPageIndex(Number(e.target.value)); }} > {Array.from({ length: totalPages }, (_, i) => ( <MenuItem key={i} value={i}> Page {i + 1} </MenuItem> ))} </Select> </span> */}
-            <Select
-              value={searchQuery.limit}
-              onChange={(e) => {
-                const newPageSize = Number(e.target.value);
-                const newTotalPages = Math.ceil(
-                  (totalRecords ?? 0) / newPageSize,
-                );
-                const newPage = Math.min(searchQuery.page, newTotalPages);
-                setSearchQuery({ limit: newPageSize, page: newPage });
-                table.setPageSize(newPageSize);
+            <DebouncedInput
+              value={searchQuery.query}
+              onChange={(value) => {
+                setSearchQuery({
+                  page: 1, // Reset to first page on search
+                  query: String(value),
+                });
               }}
-            >
-              {pageSizeOptions.map((pageSize) => (
-                <MenuItem key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </MenuItem>
-              ))}
-            </Select>
-            &nbsp;
+            />
           </div>
+
+          <TableContainer style={{ height: 400 }} component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableCell key={header.id} colSpan={header.colSpan}>
+                          {header.isPlaceholder ? null : (
+                            <>
+                              <div
+                                role="button"
+                                onKeyDown={() => {
+                                  return false;
+                                }}
+                                tabIndex={0}
+                                aria-label="Close modal"
+                                style={{
+                                  cursor: 'pointer',
+                                  width: 'max-content',
+                                }}
+                                className={
+                                  header.column.getCanSort()
+                                    ? 'cursor-pointer select-none'
+                                    : ''
+                                }
+                                onClick={header.column.getToggleSortingHandler()}
+                              >
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+
+                                {header.column.getIsSorted() !== false ? (
+                                  <i>
+                                    {
+                                      {
+                                        asc: ' (Ascending)',
+                                        desc: ' (Descending)',
+                                      }[header.column.getIsSorted() as string]
+                                    }
+                                  </i>
+                                ) : null}
+                              </div>
+                              {header.column.getCanFilter() ? (
+                                <div></div>
+                              ) : null}
+                            </>
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableHead>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : isError ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      Error loading data
+                    </TableCell>
+                  </TableRow>
+                ) : resultsLength > 0 ? (
+                  table.getRowModel().rows.map((row) => {
+                    return (
+                      <TableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => {
+                          return (
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={dynamicColumns.length}
+                      style={{ textAlign: 'center' }}
+                    >
+                      No records found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
           <div
             style={{
-              padding: 20,
-              textAlign: 'right',
-              position: 'relative',
-              float: 'right',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              height: '100px',
+              width: '100%',
             }}
           >
-            <IconButton
-              size="large"
-              aria-label="first page"
-              className="border rounded p-1"
-              onClick={() => {
-                const targetPage = 1;
-                table.setPageIndex(targetPage - 1);
-                setSearchQuery({
-                  page: targetPage,
-                });
-              }}
-              disabled={pageNumber === 1}
+            <div
+              style={{ color: 'white', padding: 20, margin: 'auto 0% auto 0%' }}
             >
-              <FirstPageIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="previous page"
-              className="border rounded p-1"
-              onClick={() => {
-                setSearchQuery({
-                  page: searchQuery.page - 1,
-                });
+              <span>{displayMessage}</span>
+              <span> | </span>
+              <span className="flex items-center gap-1">
+                <span>Page </span>
+                <strong>
+                  {`${String(pageNumber)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} of ${String(
+                    totalPages,
+                  )
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`}
+                </strong>
+              </span>
+              <span> | </span>
+              {/* Page selector */}
+              {/* <span className="flex items-center gap-1"> Page: &nbsp; <Select value={pageNumber - 1} renderValue={(value) => value + 1} onChange={(e) => { setSearchQuery({ page: Number(e.target.value), }); table.setPageIndex(Number(e.target.value)); }} > {Array.from({ length: totalPages }, (_, i) => ( <MenuItem key={i} value={i}> Page {i + 1} </MenuItem> ))} </Select> </span> */}
+              <Select
+                value={searchQuery.limit}
+                onChange={(e) => {
+                  const newPageSize = Number(e.target.value);
+                  const newTotalPages = Math.ceil(
+                    (totalRecords ?? 0) / newPageSize,
+                  );
+                  const newPage = Math.min(searchQuery.page, newTotalPages);
+                  setSearchQuery({ limit: newPageSize, page: newPage });
+                  table.setPageSize(newPageSize);
+                }}
+              >
+                {pageSizeOptions.map((pageSize) => (
+                  <MenuItem key={pageSize} value={pageSize}>
+                    Show {pageSize}
+                  </MenuItem>
+                ))}
+              </Select>
+              &nbsp;
+            </div>
+
+            <div
+              style={{
+                padding: 20,
+                textAlign: 'right',
+                position: 'relative',
+                float: 'right',
               }}
-              disabled={pageNumber === 1}
             >
-              <NavigateBeforeIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="next page"
-              className="border rounded p-1"
-              onClick={() => {
-                setSearchQuery({
-                  page: searchQuery.page + 1,
-                });
-              }}
-              disabled={pageNumber === totalPages}
-            >
-              <NavigateNextIcon />
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="last page"
-              className="border rounded p-1"
-              onClick={() => {
-                setSearchQuery({
-                  page: totalPages,
-                });
-              }}
-              disabled={pageNumber === totalPages}
-            >
-              <LastPageIcon />
-            </IconButton>
+              <IconButton
+                size="large"
+                aria-label="first page"
+                className="border rounded p-1"
+                onClick={() => {
+                  const targetPage = 1;
+                  table.setPageIndex(targetPage - 1);
+                  setSearchQuery({
+                    page: targetPage,
+                  });
+                }}
+                disabled={pageNumber === 1}
+              >
+                <FirstPageIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="previous page"
+                className="border rounded p-1"
+                onClick={() => {
+                  setSearchQuery({
+                    page: searchQuery.page - 1,
+                  });
+                }}
+                disabled={pageNumber === 1}
+              >
+                <NavigateBeforeIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="next page"
+                className="border rounded p-1"
+                onClick={() => {
+                  setSearchQuery({
+                    page: searchQuery.page + 1,
+                  });
+                }}
+                disabled={pageNumber === totalPages}
+              >
+                <NavigateNextIcon />
+              </IconButton>
+              <IconButton
+                size="large"
+                aria-label="last page"
+                className="border rounded p-1"
+                onClick={() => {
+                  setSearchQuery({
+                    page: totalPages,
+                  });
+                }}
+                disabled={pageNumber === totalPages}
+              >
+                <LastPageIcon />
+              </IconButton>
+            </div>
           </div>
         </div>
       </div>
@@ -429,7 +431,6 @@ function DebouncedInput({
       inputProps={{
         autoFocus: true,
         style: {
-          backgroundColor: 'black',
           textAlign: 'center',
         },
       }}
