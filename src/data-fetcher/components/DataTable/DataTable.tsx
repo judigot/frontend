@@ -102,16 +102,14 @@ export default function DataTable({
   const actualRowCount = totalRecords ?? (isLoading ? '' : resultsLength);
   const pageSize = table.getState().pagination.pageSize;
   const totalPages = (() => {
-    if (!isLoading) {
-      if (searchQuery.query !== '') {
-        return Math.ceil(data.length / pageSize);
-      }
-
-      if (totalRecords !== undefined) {
-        return Math.ceil(totalRecords / pageSize);
-      }
-      return table.getPageCount();
+    if (searchQuery.query !== '') {
+      return Math.ceil(data.length / pageSize);
     }
+
+    if (totalRecords !== undefined) {
+      return Math.ceil(totalRecords / pageSize);
+    }
+    return table.getPageCount();
   })();
   const visibleRowsCount = table.getRowModel().rows.length;
 
@@ -143,154 +141,138 @@ export default function DataTable({
           4,
         )}
       </h1>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateRows: 'repeat(3, 1fr)',
-          color: 'red !important',
-          height: 100,
-          width: '100%',
-          backgroundColor: 'black',
-        }}
-      >
+      <div>
         <div
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            width: '100%',
-          }}
-        >
-          <div style={{ padding: 20, textAlign: 'center' }}>
-            <DebouncedInput
-              value={searchQuery.query}
-              onChange={(value) => {
-                setSearchQuery({
-                  query: String(value),
-                  page: 1, // Reset to first page on search
-                });
-              }}
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
             backgroundColor: 'black',
-            height: '100%',
+            height: '100px',
             width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
           }}
         >
-          <TableContainer style={{ height: 400 }} component={Paper}>
-            <Table stickyHeader>
-              <TableHead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableCell key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <>
-                              <div
-                                role="button"
-                                onKeyDown={() => {
-                                  return false;
-                                }}
-                                tabIndex={0}
-                                aria-label="Close modal"
-                                style={{
-                                  cursor: 'pointer',
-                                  width: 'max-content',
-                                }}
-                                className={
-                                  header.column.getCanSort()
-                                    ? 'cursor-pointer select-none'
-                                    : ''
-                                }
-                                onClick={header.column.getToggleSortingHandler()}
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-
-                                {header.column.getIsSorted() !== false ? (
-                                  <i>
-                                    {
-                                      {
-                                        asc: ' (Ascending)',
-                                        desc: ' (Descending)',
-                                      }[header.column.getIsSorted() as string]
-                                    }
-                                  </i>
-                                ) : null}
-                              </div>
-                              {header.column.getCanFilter() ? (
-                                <div></div>
-                              ) : null}
-                            </>
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHead>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={dynamicColumns.length}
-                      style={{ textAlign: 'center' }}
-                    >
-                      Loading...
-                    </TableCell>
-                  </TableRow>
-                ) : isError ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={dynamicColumns.length}
-                      style={{ textAlign: 'center' }}
-                    >
-                      Error loading data
-                    </TableCell>
-                  </TableRow>
-                ) : resultsLength > 0 ? (
-                  table.getRowModel().rows.map((row) => {
-                    return (
-                      <TableRow key={row.id}>
-                        {row.getVisibleCells().map((cell) => {
-                          return (
-                            <TableCell key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={dynamicColumns.length}
-                      style={{ textAlign: 'center' }}
-                    >
-                      No records found
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DebouncedInput
+            value={searchQuery.query}
+            onChange={(value) => {
+              setSearchQuery({
+                page: 1, // Reset to first page on search
+                query: String(value),
+              });
+            }}
+          />
         </div>
+
+        <TableContainer style={{ height: 400 }} component={Paper}>
+          <Table stickyHeader>
+            <TableHead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableCell key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <>
+                            <div
+                              role="button"
+                              onKeyDown={() => {
+                                return false;
+                              }}
+                              tabIndex={0}
+                              aria-label="Close modal"
+                              style={{
+                                cursor: 'pointer',
+                                width: 'max-content',
+                              }}
+                              className={
+                                header.column.getCanSort()
+                                  ? 'cursor-pointer select-none'
+                                  : ''
+                              }
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+
+                              {header.column.getIsSorted() !== false ? (
+                                <i>
+                                  {
+                                    {
+                                      asc: ' (Ascending)',
+                                      desc: ' (Descending)',
+                                    }[header.column.getIsSorted() as string]
+                                  }
+                                </i>
+                              ) : null}
+                            </div>
+                            {header.column.getCanFilter() ? <div></div> : null}
+                          </>
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHead>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={dynamicColumns.length}
+                    style={{ textAlign: 'center' }}
+                  >
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : isError ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={dynamicColumns.length}
+                    style={{ textAlign: 'center' }}
+                  >
+                    Error loading data
+                  </TableCell>
+                </TableRow>
+              ) : resultsLength > 0 ? (
+                table.getRowModel().rows.map((row) => {
+                  return (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={dynamicColumns.length}
+                    style={{ textAlign: 'center' }}
+                  >
+                    No records found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
             backgroundColor: 'black',
+            height: '100px',
             width: '100%',
           }}
         >
