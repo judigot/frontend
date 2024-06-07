@@ -112,19 +112,25 @@ export default function DataTable({
     return table.getPageCount();
   })();
 
-  const displayMessage = isError
-    ? 'Error loading data.'
-    : totalRecordsCount === 0
-      ? 'No records found.'
-      : searchQuery.query === ''
-        ? `Displaying ${String(pageSize)} records out of ${String(
-            totalRecordsCount.toLocaleString(),
-          )
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
-        : totalRecordsCount === 0
-          ? `No records found for "${searchQuery.query}". Displaying 0 of ${totalRecordsCount.toLocaleString()} records.`
-          : `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${totalRecordsCount.toLocaleString()} records for "${searchQuery.query}".`;
+  const isTotalRecordsZero = totalRecordsCount === 0;
+  const isSearchQueryEmpty = searchQuery.query === '';
+
+  let displayMessage = '';
+  if (isError) {
+    displayMessage = 'Error loading data.';
+  } else {
+    if (isTotalRecordsZero && isSearchQueryEmpty) {
+      displayMessage = 'No records found.';
+    }
+    if (!isTotalRecordsZero && isSearchQueryEmpty) {
+      displayMessage = `Displaying ${String(pageSize)} records out of ${String(
+        totalRecordsCount.toLocaleString(),
+      ).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+    }
+    if (!isSearchQueryEmpty && !isTotalRecordsZero) {
+      displayMessage = `Displaying ${String(Math.min(pageSize, visibleRowsCount))} of ${totalRecordsCount.toLocaleString()} records for "${searchQuery.query}".`;
+    }
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
