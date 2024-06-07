@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import DataTable from '@/data-fetcher/components/DataTable';
 import { useUserData } from '@/data-fetcher/api/getUsersData';
 
 const queryClient = new QueryClient();
@@ -26,7 +25,7 @@ function App() {
     return <h1>Error</h1>;
   }
 
-  return Boolean(data) && Array.isArray(data) && <DataTable data={data} />;
+  return <pre>{JSON.stringify(data, null, 4)}</pre>;
 }
 
 export const ReactQuery = () => {
