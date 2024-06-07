@@ -63,15 +63,13 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
 
   const searchCondition =
     search !== ''
-      ? // Use full-text search for the search condition
-        `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
+      ? `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
       : '';
 
   const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
   pool
     .connect()
     .then((client) => {
-      // First query to get the total number of rows
       const countQuery = `
         SELECT COUNT(*) AS total_rows 
         FROM users 
@@ -81,15 +79,16 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
       interface ICountResult {
         total_rows: number;
       }
+
       client
         .query<ICountResult>(countQuery, search !== '' ? [search] : [])
         .then((countResult) => {
           const totalRows = countResult.rows[0].total_rows;
           const totalPages = Math.ceil(totalRows / Number(limit));
 
-          // Adjust the page if it exceeds total pages
+          /* Adjust the page if it exceeds total pages */
           const validPage = Math.min(Number(page), totalPages);
-          const validOffset = (validPage - 1) * Number(limit);
+          const validOffset = Math.max((validPage - 1) * Number(limit), 0);
 
           const queryString = `
             SELECT (
@@ -113,7 +112,7 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
               ? [search, validOffset, Number(limit)]
               : [validOffset, Number(limit)];
 
-          // Construct the final query string manually for logging
+          /* Construct the final query string manually for logging */
           const finalQuery =
             search !== ''
               ? queryString
@@ -124,7 +123,6 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
                   .replace('$1', String(searchParams[0]))
                   .replace('$2', String(searchParams[1]));
 
-          // Log the final query string
           console.log('Query:', finalQuery);
 
           return client
