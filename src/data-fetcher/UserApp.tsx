@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { useUserData } from '@/data-fetcher/api/getUsersData';
+import { useUserData } from '@/data-fetcher/api/useUserData';
 
 const queryClient = new QueryClient();
 

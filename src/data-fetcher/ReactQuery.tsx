@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import DataTable from '@/data-fetcher/components/DataTable';
 import { useDataTableStore } from '@/data-fetcher/components/DataTable/store';
+import { useUserData } from '@/data-fetcher/api/useUserData';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ interface IDataType {
 
 function App() {
   const { searchQuery, getData } = useDataTableStore();
+  const { data: userData } = useUserData();
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ['users', searchQuery],
@@ -35,10 +37,13 @@ function App() {
   }
 
   return (
-    <DataTable
-      totalRecords={(data as IDataType[])[0]?.total_rows ?? 0}
-      data={(data as IDataType[])[0]?.rows ?? []}
-    />
+    <>
+      <DataTable
+        totalRecords={(data as IDataType[])[0]?.total_rows ?? 0}
+        data={(data as IDataType[])[0]?.rows ?? []}
+      />
+      {JSON.stringify(userData, null, 4)}
+    </>
   );
 }
 
