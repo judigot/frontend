@@ -36,8 +36,6 @@ function App() {
 
   return (
     <DataTable
-      isLoading={isLoading}
-      isError={isError}
       totalRecords={(data as IDataType[])[0]?.total_rows ?? 0}
       data={(data as IDataType[])[0]?.rows ?? []}
     />
