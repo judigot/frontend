@@ -62,83 +62,53 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
 
     const { page = '1', limit = '100', search = '' } = req.query;
 
-    /* prettier-ignore */ ((log = req.query)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
+    const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
+
+    const client = await pool.connect();
 
     const searchCondition =
       search !== ''
         ? `WHERE search_vector @@ websearch_to_tsquery('english', $1)`
         : '';
 
-    const pool = new PostgreSQL({ connectionString: process.env.DATABASE_URL });
+    const queryString = `
+        SELECT (
+          SELECT COUNT(*)
+          FROM users ${searchCondition}
+        ) AS total_rows,
+        (
+          SELECT json_agg(rows)
+          FROM (
+            SELECT ${selectedColumns.join(', ')} 
+            FROM "users" 
+            ${searchCondition} 
+            ORDER BY id 
+            ${search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`}
+          ) as rows
+        ) AS rows;
+      `;
+
+    const offset = Math.max((Number(page) - 1) * Number(limit), 0);
+
+    const searchParams =
+      search !== '' ? [search, offset, Number(limit)] : [offset, Number(limit)];
 
     try {
-      const client = await pool.connect();
+      const result = await client.query(queryString, searchParams);
 
-      try {
-        const countQuery = `
-          SELECT COUNT(*) AS total_rows 
-          FROM users 
-          ${searchCondition}
-        `;
+      res.json(result.rows);
 
-        const countResult = await client.query<{ total_rows: number }>(
-          countQuery,
-          search !== '' ? [search] : [],
-        );
-
-        const totalRows = countResult.rows[0].total_rows;
-        const totalPages = Math.ceil(totalRows / Number(limit));
-        const validPage = Math.min(Number(page), totalPages);
-        const validOffset = Math.max((validPage - 1) * Number(limit), 0);
-
-        const queryString = `
-          SELECT (
-            SELECT COUNT(*)
-            FROM users
-          ) AS total_rows,
-          (
-            SELECT json_agg(rows)
-            FROM (
-              SELECT ${selectedColumns.join(', ')} 
-              FROM "users" 
-              ${searchCondition} 
-              ORDER BY id 
-              ${search !== '' ? `OFFSET $2 LIMIT $3` : `OFFSET $1 LIMIT $2`}
-            ) as rows
-          ) AS rows;
-        `;
-
-        const searchParams =
-          search !== ''
-            ? [search, validOffset, Number(limit)]
-            : [validOffset, Number(limit)];
-
-        const finalQuery =
-          search !== ''
-            ? queryString
-                .replace('$1', `'${String(searchParams[0])}'`)
-                .replace('$2', String(searchParams[1]))
-                .replace('$3', String(searchParams[2]))
-            : queryString
-                .replace('$1', String(searchParams[0]))
-                .replace('$2', String(searchParams[1]));
-
-        console.log('Query:', finalQuery);
-
-        const result = await client.query(queryString, searchParams);
-
-        /* prettier-ignore */ ((log = result.rows)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
-
-        res.json(result.rows);
-      } catch (queryErr) {
-        console.error(queryErr);
-        res.status(500).json({ error: 'Internal server error' });
-      } finally {
-        client.release();
-      }
-    } catch (connectionErr) {
-      console.error(connectionErr);
+      //==========LOG==========//
+      /* prettier-ignore */ const finalQuery = search !== '' ? queryString .replace('$1', `'${String(searchParams[0])}'`) .replace('$2', String(searchParams[1])) .replace('$3', String(searchParams[2])) : queryString .replace('$1', String(searchParams[0])) .replace('$2', String(searchParams[1]));
+      /* prettier-ignore */ ((log = req.query)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
+      /* prettier-ignore */ console.log('Query:', finalQuery);
+      /* prettier-ignore */ ((log = result.rows)=>{console.log(["string","number"].includes(typeof log)?log:JSON.stringify(log,null,4));})();
+      //==========LOG==========//
+    } catch (queryErr) {
+      console.error(queryErr);
       res.status(500).json({ error: 'Internal server error' });
+    } finally {
+      client.release();
     }
   })();
 });
