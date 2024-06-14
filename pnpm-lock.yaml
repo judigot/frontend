@@ -14,6 +14,9 @@ dependencies:
   '@emotion/styled':
     specifier: ^11.11.5
     version: 11.11.5(@emotion/react@11.11.4)(@types/react@18.3.2)(react@18.3.1)
+  '@hookform/resolvers':
+    specifier: ^3.6.0
+    version: 3.6.0(react-hook-form@7.51.5)
   '@mui/icons-material':
     specifier: ^5.15.17
     version: 5.15.17(@mui/material@5.15.17)(@types/react@18.3.2)(react@18.3.1)
@@ -29,6 +32,9 @@ dependencies:
   '@tanstack/match-sorter-utils':
     specifier: ^8.15.1
     version: 8.15.1
+  '@tanstack/react-form':
+    specifier: ^0.21.0
+    version: 0.21.0(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
     specifier: ^5.35.1
     version: 5.36.0(react@18.3.1)
@@ -41,6 +47,9 @@ dependencies:
   '@tanstack/table-core':
     specifier: ^8.17.3
     version: 8.17.3
+  '@tanstack/zod-form-adapter':
+    specifier: ^0.21.0
+    version: 0.21.0(zod@3.23.8)
   '@types/pg-pool':
     specifier: ^2.0.6
     version: 2.0.6
@@ -77,6 +86,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.3.1(react@18.3.1)
+  react-hook-form:
+    specifier: ^7.51.5
+    version: 7.51.5(react@18.3.1)
   react-redux:
     specifier: ^9.1.2
     version: 9.1.2(@types/react@18.3.2)(react@18.3.1)(redux@5.0.1)
@@ -1173,6 +1185,14 @@ packages:
   /@floating-ui/utils@0.2.2:
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
 
+  /@hookform/resolvers@3.6.0(react-hook-form@7.51.5):
+    resolution: {integrity: sha512-UBcpyOX3+RR+dNnqBd0lchXpoL8p4xC21XP8H6Meb8uve5Br1GCnmg0PcBoKKqPKgGu9GHQ/oygcmPrQhetwqw==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.51.5(react@18.3.1)
+    dev: false
+
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
@@ -1918,6 +1938,12 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@tanstack/form-core@0.21.0:
+    resolution: {integrity: sha512-ZhiG74PSZ5ECZXcidD7iEabQTMr8YtEdshGB3ai3ZXsjIHUF185sWyHc1N6VyccUaLJ6/IiNbUdjTMhZWjdRyg==}
+    dependencies:
+      '@tanstack/store': 0.3.1
+    dev: false
+
   /@tanstack/match-sorter-utils@8.15.1:
     resolution: {integrity: sha512-PnVV3d2poenUM31ZbZi/yXkBu3J7kd5k2u51CGwwNojag451AjTH9N6n41yjXz2fpLeewleyLBmNS6+HcGDlXw==}
     engines: {node: '>=12'}
@@ -1929,6 +1955,21 @@ packages:
     resolution: {integrity: sha512-B5BD3pg/mztDR36i77hGcyySKKeYrbM5mnogOROTBi1SUml5ByRK7PGUUl16vvubvQC+mSnqziFG/VIy/DE3FQ==}
     dev: false
 
+  /@tanstack/react-form@0.21.0(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-+HEMLYav98SBawDK7XfczmODUxDLii7Bo9DGgjCCYO+IUaPMRfto/VLcwFJB/0H1us8sShdbV/IdVJa3VU+LaQ==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/form-core': 0.21.0
+      '@tanstack/react-store': 0.3.1(react-dom@18.3.1)(react@18.3.1)
+      decode-formdata: 0.4.0
+      react: 18.3.1
+      rehackt: 0.0.3(@types/react@18.3.2)(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - react-dom
+    dev: false
+
   /@tanstack/react-query@5.36.0(react@18.3.1):
     resolution: {integrity: sha512-BATvtM0rohwg7pRHUnxgeDiwLWRGZ8OM/4y8LImHVpecQWoH6Uhytu3Z8YV6V7hQ1sMQBFcUrGE1/e4MxR6YiA==}
     peerDependencies:
@@ -1936,6 +1977,18 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.36.0
       react: 18.3.1
+    dev: false
+
+  /@tanstack/react-store@0.3.1(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-PfV271d345It6FdcX4c9gd+llKGddtvau8iJnybTAWmYVyDeFWfIIkiAJ5iNITJmI02AzqgtcV3QLNBBlpBUjA==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/store': 0.3.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      use-sync-external-store: 1.2.2(react@18.3.1)
     dev: false
 
   /@tanstack/react-table@8.17.0(react-dom@18.3.1)(react@18.3.1):
@@ -1961,6 +2014,10 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
+  /@tanstack/store@0.3.1:
+    resolution: {integrity: sha512-A49KN8SpLMWaNmZGPa9K982RQ81W+m7W6iStcQVeKeVS70JZRqkF0fDwKByREPq6qz9/kS0aQFOPQ0W6wIeU5g==}
+    dev: false
+
   /@tanstack/table-core@8.16.0:
     resolution: {integrity: sha512-dCG8vQGk4js5v88/k83tTedWOwjGnIyONrKpHpfmSJB8jwFHl8GSu1sBBxbtACVAPtAQgwNxl0rw1d3RqRM1Tg==}
     engines: {node: '>=12'}
@@ -1973,6 +2030,15 @@ packages:
 
   /@tanstack/virtual-core@3.5.0:
     resolution: {integrity: sha512-KnPRCkQTyqhanNC0K63GBG3wA8I+D1fQuVnAvcBF8f13akOKeQp1gSbu6f77zCxhEk727iV5oQnbHLYzHrECLg==}
+    dev: false
+
+  /@tanstack/zod-form-adapter@0.21.0(zod@3.23.8):
+    resolution: {integrity: sha512-VHVQDBFmrEmmCOBgJ1TmSgDD0weXHesVjv3kcuGZ/2BFawOUb2eb+jn8BYHsZSM/Ea2QP577R3mtCHNOohojZA==}
+    peerDependencies:
+      zod: ^3.x
+    dependencies:
+      '@tanstack/form-core': 0.21.0
+      zod: 3.23.8
     dev: false
 
   /@testing-library/dom@10.1.0:
@@ -3303,6 +3369,10 @@ packages:
   /decimal.js@10.4.3:
     resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
     dev: true
+
+  /decode-formdata@0.4.0:
+    resolution: {integrity: sha512-/OMUlsRLrSgHPOWCwembsFFTT4DY7Ts9GGlwK8v9yeLOyYZSPKIfn/1oOuV9UmpQ9CZi5JeyT8edunRoBOOl5g==}
+    dev: false
 
   /dedent@1.5.3:
     resolution: {integrity: sha512-NHQtfOOW68WD8lgypbLA5oT+Bt0xXJhiYvoR6SmmNXZfpzOGXwdKWmcwG8N7PwVVWV3eF/68nmD9BaJSsTBhyQ==}
@@ -6319,6 +6389,15 @@ packages:
       react: 18.3.1
       scheduler: 0.23.2
 
+  /react-hook-form@7.51.5(react@18.3.1):
+    resolution: {integrity: sha512-J2ILT5gWx1XUIJRETiA7M19iXHlG74+6O3KApzvqB/w8S5NQR7AbU8HVZrMALdmDgWpRPYiZJl0zx8Z4L2mP6Q==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.3.1
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -6519,6 +6598,21 @@ packages:
       es-errors: 1.3.0
       set-function-name: 2.0.2
     dev: true
+
+  /rehackt@0.0.3(@types/react@18.3.2)(react@18.3.1):
+    resolution: {integrity: sha512-aBRHudKhOWwsTvCbSoinzq+Lej/7R8e8UoPvLZo5HirZIIBLGAgdG7SL9QpdcBoQ7+3QYPi3lRLknAzXBlhZ7g==}
+    peerDependencies:
+      '@types/react': '*'
+      react: '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.3.2
+      react: 18.3.1
+    dev: false
 
   /remove-accents@0.5.0:
     resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
