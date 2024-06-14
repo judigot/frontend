@@ -47,13 +47,24 @@ const App: React.FC = () => {
   const handleAddTable = () => {
     if (newTableName) {
       const newTableId = `${newTableName}_id`;
-      setSchema((prevSchema) => ({
-        ...prevSchema,
-        [newTableName]: [{ [newTableId]: 1 }],
-      }));
-      setNewTableName('');
+  
+      // Check if newTableId already exists in the schema
+      const doesTableIdExist = Object.values(schema).some(rows =>
+        rows.some(row => newTableId in row)
+      );
+  
+      if (!doesTableIdExist) {
+        setSchema((prevSchema) => ({
+          ...prevSchema,
+          [newTableName]: [{ [newTableId]: 1 }],
+        }));
+        setNewTableName('');
+      } else {
+        console.log(`Table ID ${newTableId} already exists in the schema.`);
+      }
     }
   };
+  
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTableName(event.target.value);
@@ -118,9 +129,7 @@ const App: React.FC = () => {
       Object.keys(schema).forEach((table) => {
         newSchema[table] = schema[table].map((row, index) => {
           const primaryKey = `${table}_id`;
-          const newRow: IPrimaryKey = {
-            [primaryKey]: row[primaryKey] ?? index + 1,
-          }; // Primary key as the first property
+          const newRow: IPrimaryKey = { [primaryKey]: index + 1 }; // Primary key as the first property
 
           // Add remaining properties
           Object.keys(row).forEach((key) => {
@@ -135,7 +144,6 @@ const App: React.FC = () => {
 
       return newSchema;
     };
-
     const { previousWord, newWord } = handleWordEdit(e);
     const schemaStringBeforeEditing = schemaString;
     const newSchemaString = e.target.value;
@@ -224,8 +232,13 @@ const App: React.FC = () => {
     <Container>
       <Grid container spacing={3} style={{ padding: 16 }}>
         <Grid item xs={12}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            JSON Database Schema Editor
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
           <TextField
-            label="Enter new table"
+            label="New Table Name"
             value={newTableName}
             onChange={handleInputChange}
             variant="outlined"
@@ -239,27 +252,25 @@ const App: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddTable}
-            disabled={!newTableName}
-          >
-            Add Table
-          </Button>
+          {
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddTable}
+              disabled={!newTableName}
+            >
+              Add Table
+            </Button>
+          }
         </Grid>
         <Grid item xs={12}>
           <Paper style={{ padding: 16 }}>
-            <Typography variant="h6">Schema:</Typography>
+            <Typography variant="h6">Current Schema:</Typography>
             <TextareaAutosize
               ref={textAreaRef}
               minRows={10}
               style={{
-                height: '50px',
                 width: '100%',
-                resize: 'none',
-                fontSize: 15,
-                overflowY: 'scroll',
               }}
               value={schemaString}
               onChange={handleSchemaChange}
