@@ -59,6 +59,9 @@ dependencies:
   express:
     specifier: ^4.19.2
     version: 4.19.2
+  json5:
+    specifier: ^2.2.3
+    version: 2.2.3
   mui-datatables:
     specifier: ^4.3.0
     version: 4.3.0(@emotion/react@11.11.4)(@mui/icons-material@5.15.17)(@mui/material@5.15.17)(react-dom@18.3.1)(react@18.3.1)
@@ -5256,7 +5259,6 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
-    dev: true
 
   /jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
