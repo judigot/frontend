@@ -1,4 +1,4 @@
-import App from '@/json-schema-editor';
+import App from '@/master-layout';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
