@@ -1,15 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Button,
-  TextField,
-  Grid,
-  Paper,
-  Typography,
-  Container,
-  TextareaAutosize,
-} from '@mui/material';
 import JSON5 from 'json5';
 import { useWordEditor } from '@/json-schema-editor/hooks/useWordEditor';
+
+import './scss/main.scss';
 
 type IJsonSchema = Record<string, Record<string, unknown>[]>;
 
@@ -47,24 +40,21 @@ const App: React.FC = () => {
   const handleAddTable = () => {
     if (newTableName) {
       const newTableId = `${newTableName}_id`;
-  
+
       // Check if newTableId already exists in the schema
-      const doesTableIdExist = Object.values(schema).some(rows =>
-        rows.some(row => newTableId in row)
+      const doesTableIdExist = Object.values(schema).some((rows) =>
+        rows.some((row) => newTableId in row),
       );
-  
+
       if (!doesTableIdExist) {
         setSchema((prevSchema) => ({
           ...prevSchema,
           [newTableName]: [{ [newTableId]: 1 }],
         }));
         setNewTableName('');
-      } else {
-        console.log(`Table ID ${newTableId} already exists in the schema.`);
       }
     }
   };
-  
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTableName(event.target.value);
@@ -167,22 +157,18 @@ const App: React.FC = () => {
         // Collect foreign key values and prepare the new schema
         for (const [tableName, rows] of Object.entries(oldSchema)) {
           if (tableName === previousWord) {
-            newSchema[newWord] = (rows as Record<string, unknown>[]).map(
-              (item) => {
-                const newItem = renameProperty(item, previousWordId, newWordId);
-                return newItem;
-              },
-            );
+            newSchema[newWord] = rows.map((item) => {
+              const newItem = renameProperty(item, previousWordId, newWordId);
+              return newItem;
+            });
           } else {
-            newSchema[tableName] = (rows as Record<string, unknown>[]).map(
-              (item, index) => {
-                if (previousWordId in item) {
-                  foreignKeyValues[tableName] = {};
-                  foreignKeyValues[tableName][index] = item[previousWordId];
-                }
-                return { ...item };
-              },
-            );
+            newSchema[tableName] = rows.map((item, index) => {
+              if (previousWordId in item) {
+                foreignKeyValues[tableName] = {};
+                foreignKeyValues[tableName][index] = item[previousWordId];
+              }
+              return { ...item };
+            });
           }
         }
 
@@ -203,7 +189,8 @@ const App: React.FC = () => {
       }
 
       setIsValidJson(true);
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       // Allow partial and invalid JSON during editing
       setIsValidJson(false);
     }
@@ -229,20 +216,24 @@ const App: React.FC = () => {
   }, [schemaString]);
 
   return (
-    <Container>
-      <Grid container spacing={3} style={{ padding: 16 }}>
-        <Grid item xs={12}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            JSON Database Schema Editor
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="New Table Name"
+    <>
+      <div>
+        <h1>JSON Database Schema Editor</h1>
+      </div>
+      <div>
+        <div className="mb-4">
+          <label
+            htmlFor="newTableName"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            New Table Name
+          </label>
+          <input
+            id="newTableName"
+            type="text"
             value={newTableName}
             onChange={handleInputChange}
-            variant="outlined"
-            fullWidth
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-300 dark:focus:border-indigo-300"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleAddTable();
@@ -250,41 +241,35 @@ const App: React.FC = () => {
               }
             }}
           />
-        </Grid>
-        <Grid item xs={12}>
-          {
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddTable}
-              disabled={!newTableName}
-            >
-              Add Table
-            </Button>
-          }
-        </Grid>
-        <Grid item xs={12}>
-          <Paper style={{ padding: 16 }}>
-            <Typography variant="h6">Current Schema:</Typography>
-            <TextareaAutosize
-              ref={textAreaRef}
-              minRows={10}
-              style={{
-                width: '100%',
-              }}
-              value={schemaString}
-              onChange={handleSchemaChange}
-              onKeyDown={handleKeyDown}
-            />
-            {!isValidJson && (
-              <Typography color="error">
-                Invalid JSON format. Please correct it.
-              </Typography>
-            )}
-          </Paper>
-        </Grid>
-      </Grid>
-    </Container>
+        </div>
+      </div>
+      <button
+        onClick={handleAddTable}
+        disabled={!newTableName}
+        className={`px-4 py-2 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 
+    ${newTableName ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-gray-400 cursor-not-allowed'}
+    dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-indigo-300 dark:focus:ring-opacity-50 dark:disabled:bg-gray-600`}
+      >
+        Add Table
+      </button>
+      <br />
+      <br />
+      <div className="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <textarea
+          ref={textAreaRef}
+          rows={10}
+          className="w-full mt-2 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-indigo-300 dark:focus:border-indigo-300"
+          value={schemaString}
+          onChange={handleSchemaChange}
+          onKeyDown={handleKeyDown}
+        />
+        {!isValidJson && (
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+            Invalid JSON format. Please correct it.
+          </p>
+        )}
+      </div>
+    </>
   );
 };
 
