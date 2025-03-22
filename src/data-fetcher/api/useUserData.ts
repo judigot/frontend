@@ -52,10 +52,11 @@ export const useUserData = (
     queryFn: fetchUserData,
 
     // Default settings that can be overridden by the behavior parameter
-    staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false,
-    retry: 2,
+    refetchInterval: 1 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
 
     ...behavior, // This will override the default settings
   });

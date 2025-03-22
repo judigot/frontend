@@ -8,12 +8,13 @@ const queryClient = new QueryClient();
 
 function App() {
   const { data, isError, isLoading } = useUserData({
-    //==========BEHAVIOR==========//
+    //==========OVERRIDE DEFAULT BEHAVIOR==========//
     gcTime: 5 * 60000, // 5 minutes cache time
     refetchOnWindowFocus: true,
     refetchInterval: 1 * 1000,
     staleTime: 1 * 1000,
-    //==========BEHAVIOR==========//
+    retry: 2,
+    //==========OVERRIDE DEFAULT BEHAVIOR==========//
   });
 
   // If there's no initialData, you can use isLoading
