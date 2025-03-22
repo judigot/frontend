@@ -14,6 +14,7 @@ function App() {
     refetchInterval: 1 * 1000,
     staleTime: 1 * 1000,
     retry: 2,
+    // enabled: !!exampleParameter, // Only run refetch when exampleParameter is truthy
     //==========OVERRIDE DEFAULT BEHAVIOR==========//
   });
 
