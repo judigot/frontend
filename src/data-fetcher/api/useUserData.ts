@@ -50,6 +50,13 @@ export const useUserData = (
   return useQuery({
     queryKey: ['dinoData'],
     queryFn: fetchUserData,
-    ...behavior,
+
+    // Default settings that can be overridden by the behavior parameter
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    retry: 2,
+
+    ...behavior, // This will override the default settings
   });
 };
