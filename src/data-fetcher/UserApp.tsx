@@ -10,9 +10,9 @@ function App() {
   const { data, isError, isLoading } = useUserData({
     //==========OVERRIDE DEFAULT BEHAVIOR==========//
     refetchInterval: 1 * 1000, // Refresh every 1 second
-    staleTime: 1 * 60 * 1000, // 1 minute
+    staleTime: 1 * 1000, // 1 minute
     gcTime: 5 * 60000, // 5 minutes
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: 'always', // Refetch on window focus — but only if stale
     retry: 2,
     // enabled: !!exampleParameter, // Only run refetch when exampleParameter is truthy
     //==========OVERRIDE DEFAULT BEHAVIOR==========//
